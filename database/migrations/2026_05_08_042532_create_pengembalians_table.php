@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_peminjams');
             $table->date('tgl_pengembalian');
             $table->integer('denda')->default(0);
+            $table->string('status')->default('belum dikembalikan, sedang dipinjam, sudah dikembalikan');
             $table->timestamps();
 
             // Relasi

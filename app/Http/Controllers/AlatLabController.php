@@ -1,16 +1,19 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\AlatLab;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class AlatLabController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        $alat = AlatLab::latest()->paginate(10);
+        $alat = AlatLab::latest('created_at')->paginate(10);
+
         return view('admin.pages.alatlab.index', compact('alat'));
     }
 
@@ -46,6 +49,7 @@ class AlatLabController extends Controller
     public function edit($id)
     {
         $alat = AlatLab::findOrFail($id);
+
         return view('admin.pages.alatlab.edit', compact('alat'));
     }
 

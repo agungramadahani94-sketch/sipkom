@@ -44,7 +44,8 @@ Route::resource('peminjam', PeminjamController::class);
 Route::post('/peminjam/kembali/{id}', [PeminjamController::class, 'kembali'])
     ->name('peminjam.kembali');
 // Alat Lab
-Route::resource('alatlab', AlatLabController::class);
+Route::resource('alatlab', AlatLabController::class)->except(['show']);
+
 
 // Pengembalian
 Route::view('pengembalian', 'admin.pages.pengembalian.index')->name('pengembalian');

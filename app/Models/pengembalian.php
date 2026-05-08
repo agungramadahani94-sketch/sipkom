@@ -6,5 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class pengembalian extends Model
 {
-    //
+    protected $table = 'pengembalians';
+    protected $fillable = [
+        'id_peminjaman',
+        'tanggal_pengembalian',
+        'denda',
+    ];
+
+    public function peminjaman()
+    {
+        return $this->belongsTo(peminjaman::class, 'id_peminjaman');
+    }
 }

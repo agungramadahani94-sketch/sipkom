@@ -11,8 +11,8 @@ class PeminjamController extends Controller
 {
     public function index()
     {
-        $peminjams = Peminjam::with(['user', 'alat'])->latest()->paginate(10);
-        return view('admin.pages.peminjam.index', compact('peminjams'));
+        $peminjam = Peminjam::latest()->paginate(10);
+        return view('admin.pages.peminjam.index', compact('peminjam'));
     }
 
     public function create()
@@ -133,11 +133,11 @@ class PeminjamController extends Controller
 
     public function pengembalian()
     {
-        $peminjams = Peminjam::with(['user', 'alat'])
+        $peminjam = Peminjam::where('status', 'kembali')
             ->where('status', 'dipinjam')
             ->latest()
             ->paginate(10);
 
-        return view('admin.pages.pengembalian.index', compact('peminjams'));
+        return view('admin.pages.pengembalian.index', compact('peminjam'));
     }
 }

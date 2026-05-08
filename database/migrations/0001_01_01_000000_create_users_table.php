@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('no_tlp')->nullable();
             $table->enum('role', ['admin', 'user']);
             $table->string('password');
+            $table->timestamps();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
