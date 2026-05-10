@@ -109,7 +109,7 @@
 <main>
     <div class="card">
         <div class="card-head">
-            <h2>Buat Akun</h2>
+            <h2>Register SIPALKOM</h2>
             <p>Daftar ke sistem SIPALKOM</p>
         </div>
 

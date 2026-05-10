@@ -1,19 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
+
+use App\Http\Controllers\Controller;
 use App\Models\AlatLab;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class AlatLabController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $alat = AlatLab::latest('created_at')->paginate(10);
-
+        $alat = AlatLab::latest()->paginate(10);
         return view('admin.pages.alatlab.index', compact('alat'));
     }
 
@@ -32,6 +30,7 @@ class AlatLabController extends Controller
             'gambar' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        // upload gambar
         $gambarPath = $request->file('gambar')->store('alat', 'public');
 
         AlatLab::create([
@@ -49,7 +48,6 @@ class AlatLabController extends Controller
     public function edit($id)
     {
         $alat = AlatLab::findOrFail($id);
-
         return view('admin.pages.alatlab.edit', compact('alat'));
     }
 
@@ -65,12 +63,12 @@ class AlatLabController extends Controller
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $data = [
-            'nama_alat' => $request->nama_alat,
-            'kategori' => $request->kategori,
-            'kondisi' => $request->kondisi,
-            'stok' => $request->stok,
-        ];
+        $data = $request->only([
+            'nama_alat',
+            'kategori',
+            'kondisi',
+            'stok'
+        ]);
 
         if ($request->hasFile('gambar')) {
 
@@ -79,6 +77,7 @@ class AlatLabController extends Controller
                 Storage::disk('public')->delete($alat->gambar);
             }
 
+            // upload baru
             $data['gambar'] = $request->file('gambar')->store('alat', 'public');
         }
 
@@ -92,6 +91,7 @@ class AlatLabController extends Controller
     {
         $alat = AlatLab::findOrFail($id);
 
+        // hapus gambar
         if ($alat->gambar && Storage::disk('public')->exists($alat->gambar)) {
             Storage::disk('public')->delete($alat->gambar);
         }

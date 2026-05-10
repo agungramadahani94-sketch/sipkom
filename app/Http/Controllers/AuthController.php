@@ -18,8 +18,8 @@ class AuthController extends Controller
     public function loginProses(Request $request)
     {
         $request->validate([
-            'email' => 'required',
-            'password' => 'required|min:6' // ubah biar sama dengan register
+            'email' => 'required|email',
+            'password' => 'required|min:6'
         ], [
             'email.required' => 'Email wajib diisi',
             'password.required' => 'Password wajib diisi',
@@ -32,10 +32,25 @@ class AuthController extends Controller
         ];
 
         if (Auth::attempt($data)) {
-            return redirect()->route('beranda')->with('success', 'Berhasil login');
-        } else {
-            return redirect()->back()->with('error', 'Email atau Password salah');
+
+            $request->session()->regenerate();
+
+            // CEK ROLE
+            if (Auth::user()->role == 'admin') {
+                return redirect()->route('admin.dashboard')
+                    ->with('success', 'Login Admin berhasil');
+            }
+
+            if (Auth::user()->role == 'user') {
+                return redirect()->route('user.dashboard')
+                    ->with('success', 'Login User berhasil');
+            }
+
+            Auth::logout();
+            return redirect('/login')->with('error', 'Role tidak valid');
         }
+
+        return redirect()->back()->with('error', 'Email atau Password salah');
     }
 
     // ================= REGISTER =================

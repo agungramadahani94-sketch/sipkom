@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
 
 use App\Models\Peminjam;
 use App\Models\User;
@@ -11,8 +11,8 @@ class PeminjamController extends Controller
 {
     public function index()
     {
-        $peminjam = Peminjam::latest()->paginate(10);
-        return view('admin.pages.peminjam.index', compact('peminjam'));
+        $peminjams = Peminjam::with(['user', 'alat'])->latest()->paginate(10);
+        return view('admin.pages.peminjam.index', compact('peminjams'));
     }
 
     public function create()
@@ -133,11 +133,11 @@ class PeminjamController extends Controller
 
     public function pengembalian()
     {
-        $peminjam = Peminjam::where('status', 'kembali')
-            ->where('status', 'dipinjam')
+        $peminjams = Peminjam::with(['user', 'alat'])
+          
             ->latest()
             ->paginate(10);
 
-        return view('admin.pages.pengembalian.index', compact('peminjam'));
+        return view('admin.pages.pengembalian.index', compact('peminjams'));
     }
 }

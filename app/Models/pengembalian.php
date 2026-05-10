@@ -15,6 +15,6 @@ class pengembalian extends Model
 
     public function peminjaman()
     {
-        return $this->belongsTo(peminjaman::class, 'id_peminjaman');
+        return $this->belongsTo(peminjamans::class, 'id_peminjaman');
     }
 }

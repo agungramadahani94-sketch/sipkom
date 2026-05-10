@@ -2,10 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BerandaController;
-use App\Http\Controllers\AlatLabController;
-use App\Http\Controllers\PeminjamController;
-use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,43 +9,69 @@ use App\Http\Controllers\UserController;
 |--------------------------------------------------------------------------
 */
 
-// Landing page
 Route::get('/', function () {
     return view('welcome');
 });
 
-
-
-//login
+// LOGIN
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'loginProses'])->name('loginProses');
 
-//register
+// REGISTER
 Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::post('register', [AuthController::class, 'registerProses'])->name('registerProses');
-//logout
+
+// LOGOUT
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 
 
-//----------------------------Admin Routes----------------------------
-// Beranda
-Route::get('beranda', [BerandaController::class, 'index'])->name('beranda');
+/*
+|--------------------------------------------------------------------------
+| ADMIN ROUTES
+|--------------------------------------------------------------------------
+*/
 
-// User page
-Route::get('/user', [UserController::class, 'index'])->name('user.index');
+Route::prefix('admin')->middleware(['auth', 'admin.'])->group(function () {
 
-// Peminjam
-Route::resource('peminjam', PeminjamController::class);
-Route::post('/peminjam/kembali/{id}', [PeminjamController::class, 'kembali'])
-    ->name('peminjam.kembali');
-// Alat Lab
-Route::resource('alatlab', AlatLabController::class)->except(['show']);
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\BerandaController::class, 'index'])
+        ->name('admin.dashboard');
+
+    // ALAT LAB
+    Route::resource('/alatlab', \App\Http\Controllers\Admin\AlatLabController::class)
+        ->names('admin.alatlab');
+
+    // PEMINJAMAN
+    Route::get('/peminjaman', [\App\Http\Controllers\Admin\PeminjamController::class, 'index'])
+        ->name('admin.peminjaman.index');
+
+    Route::post('/peminjaman/{id}/status', [\App\Http\Controllers\Admin\PeminjamController::class, 'updateStatus'])
+        ->name('admin.peminjaman.status');
+
+    // PENGEMBALIAN
+    Route::get('/pengembalian', [\App\Http\Controllers\Admin\PengembalianController::class, 'index'])
+        ->name('admin.pengembalian.index');
+});
 
 
-// Pengembalian
-Route::view('pengembalian', 'admin.pages.pengembalian.index')->name('pengembalian');
-Route::get('/pengembalian', [PeminjamController::class, 'pengembalian'])
-    ->name('pengembalian');
 
-    
+/*
+|--------------------------------------------------------------------------
+| USER ROUTES
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('user')->middleware(['auth', 'role:user'])->group(function () {
+
+    Route::get('/dashboard', [\App\Http\Controllers\User\BerandaController::class, 'index'])
+        ->name('user.dashboard');
+
+    Route::get('/alat', [\App\Http\Controllers\User\AlatController::class, 'index'])
+        ->name('user.alat');
+
+    Route::get('/peminjaman', [\App\Http\Controllers\User\PeminjamanController::class, 'index'])
+        ->name('user.peminjaman');
+
+    Route::post('/pinjam', [\App\Http\Controllers\User\PeminjamanController::class, 'store'])
+        ->name('user.pinjam');
+});

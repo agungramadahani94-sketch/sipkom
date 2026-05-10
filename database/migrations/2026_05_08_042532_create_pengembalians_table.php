@@ -14,14 +14,16 @@ return new class extends Migration
         Schema::create('pengembalians', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('id_peminjams');
-            $table->date('tgl_pengembalian');
-            $table->integer('denda')->default(0);
-            $table->string('status')->default('belum dikembalikan, sedang dipinjam, sudah dikembalikan');
-            $table->timestamps();
+            $table->foreignId('peminjam_id')
+                ->constrained('peminjams')
+                ->onDelete('cascade');
 
-            // Relasi
-            $table->foreign('id_peminjams')->references('id')->on('peminjams')->onDelete('cascade');
+            $table->date('tanggal_kembali');
+
+            $table->enum('status', ['dipinjam', 'dikembalikan'])->default('dipinjam');
+
+
+            $table->timestamps();
         });
     }
 

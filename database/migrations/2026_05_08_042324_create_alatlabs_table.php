@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('kategori');
             $table->enum('kondisi', ['baik', 'rusak', 'diperbaiki'])->default('baik');
             $table->integer('stok');
-            $table->string('gambar')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('alatlabs');
+        Schema::dropIfExists('alat_labs');
     }
 };
