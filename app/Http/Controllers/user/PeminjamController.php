@@ -9,34 +9,33 @@ use Illuminate\Http\Request;
 
 class PeminjamanController extends Controller
 {
-    // ✅ RIWAYAT PEMINJAMAN USER
+    // Riwayat peminjaman user
     public function index()
     {
         $data = Peminjam::with('alat')
-            ->where('user_id', auth()->id())
+            ->where('id_user', auth()->id())
             ->latest()
             ->get();
 
         return view('user.pages.peminjam.index', compact('data'));
     }
 
-    // ✅ PROSES PINJAM
+    // Proses pinjam
     public function store(Request $request)
     {
         $request->validate([
-            'alat_id' => 'required|exists:alat_labs,id_alat'
+            'alat_id' => 'required|exists:alatlabs,id_alat',
         ]);
 
-        $alat = AlatLab::where('id_alat', $request->alat_id)->firstOrFail();
+        $alat = AlatLab::findOrFail($request->alat_id);
 
-        // ❌ kalau stok habis
         if ($alat->stok <= 0) {
             return back()->with('error', 'Stok alat habis!');
         }
 
-        // ❌ cegah pinjam double
-        $cek = Peminjam::where('user_id', auth()->id())
-            ->where('alat_id', $alat->id_alat)
+        // Cegah pinjam double
+        $cek = Peminjam::where('id_user', auth()->id())
+            ->where('id_alat', $alat->id_alat)
             ->where('status', 'dipinjam')
             ->exists();
 
@@ -44,39 +43,34 @@ class PeminjamanController extends Controller
             return back()->with('error', 'Kamu masih meminjam alat ini!');
         }
 
-        // ✅ simpan
         Peminjam::create([
-            'user_id' => auth()->id(),
-            'alat_id' => $alat->id_alat,
-            'tanggal_pinjam' => now(),
-            'status' => 'dipinjam'
+            'id_user'    => auth()->id(),
+            'id_alat'    => $alat->id_alat,
+            'tgl_pinjam' => now()->toDateString(),
+            'status'     => 'dipinjam',
         ]);
 
-        // ✅ kurangi stok
         $alat->decrement('stok');
 
         return back()->with('success', 'Berhasil meminjam alat');
     }
 
-    // ✅ KEMBALIKAN (USER)
+    // Kembalikan (user)
     public function kembali($id)
     {
-        $peminjam = Peminjam::where('user_id', auth()->id())
-            ->where('id', $id)
+        $peminjam = Peminjam::where('id_user', auth()->id())
+            ->where('id_peminjam', $id)
             ->firstOrFail();
 
-        // ❌ kalau sudah dikembalikan
-        if ($peminjam->status == 'dikembalikan') {
+        if ($peminjam->status === 'kembali') {
             return back()->with('error', 'Sudah dikembalikan!');
         }
 
-        // ✅ update status
         $peminjam->update([
-            'status' => 'dikembalikan',
-            'tanggal_kembali' => now()
+            'status'           => 'kembali',
+            'tgl_pengembalian' => now()->toDateString(),
         ]);
 
-        // ✅ tambah stok kembali
         $peminjam->alat->increment('stok');
 
         return back()->with('success', 'Berhasil mengembalikan alat');

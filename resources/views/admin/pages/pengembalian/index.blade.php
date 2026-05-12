@@ -12,7 +12,7 @@
         <div class="card">
 
             <div class="card-header">
-                <h4>Data Pengembalian</h4>
+                <h4>Data Pengembalian (Belum Dikembalikan)</h4>
             </div>
 
             <div class="card-body">
@@ -21,14 +21,14 @@
                     <table class="table table-striped table-bordered">
 
                         <thead class="text-center">
-                            <tr class="bg-primary ">
+                            <tr class="bg-primary">
                                 <th class="text-white">No</th>
                                 <th class="text-white">Nama</th>
                                 <th class="text-white">Alat</th>
                                 <th class="text-white">Tgl Pinjam</th>
                                 <th class="text-white">Batas Kembali</th>
                                 <th class="text-white">Status</th>
-                             
+                                <th class="text-white">Aksi</th>
                             </tr>
                         </thead>
 
@@ -39,11 +39,11 @@
                                 <td>{{ $p->user->nama ?? '-' }}</td>
                                 <td>{{ $p->alat->nama_alat ?? '-' }}</td>
                                 <td>{{ $p->tgl_pinjam }}</td>
-                                <td>{{ $p->tgl_pengembalian }}</td>
+                                <td>{{ $p->tgl_pengembalian ?? '-' }}</td>
 
-                                {{-- 🔥 STATUS TELAT --}}
+                                {{-- STATUS TELAT --}}
                                 <td>
-                                    @if(now()->gt($p->tgl_pengembalian))
+                                    @if($p->tgl_pengembalian && now()->gt($p->tgl_pengembalian))
                                         <span class="badge badge-danger">Telat</span>
                                     @else
                                         <span class="badge badge-warning">Dipinjam</span>

@@ -12,11 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('peminjams', function (Blueprint $table) {
-            $table->id(); // WAJIB ini
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('alatlab_id');
-            $table->date('tanggal_pinjam');
+            $table->id('id_peminjam');
+            $table->unsignedBigInteger('id_user');
+            $table->unsignedBigInteger('id_alat');
+            $table->date('tgl_pinjam');
+            $table->date('tgl_pengembalian')->nullable();
+            $table->enum('status', ['dipinjam', 'kembali'])->default('dipinjam');
             $table->timestamps();
+
+            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
+            $table->foreign('id_alat')->references('id_alat')->on('alatlabs')->onDelete('cascade');
         });
     }
 

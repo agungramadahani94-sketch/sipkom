@@ -6,30 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('pengembalians', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('peminjam_id')
-                ->constrained('peminjams')
-                ->onDelete('cascade');
+            $table->unsignedBigInteger('peminjam_id');
 
             $table->date('tanggal_kembali');
 
             $table->enum('status', ['dipinjam', 'dikembalikan'])->default('dipinjam');
 
-
             $table->timestamps();
+
+            $table->foreign('peminjam_id')
+                ->references('id_peminjam')
+                ->on('peminjams')
+                ->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('pengembalians');

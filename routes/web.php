@@ -32,25 +32,44 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('admin')->middleware(['auth', 'admin.'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/dashboard', [\App\Http\Controllers\Admin\BerandaController::class, 'index'])
-        ->name('admin.dashboard');
+        ->name('beranda');
+
+    // USER
+    Route::get('/user', [\App\Http\Controllers\Admin\UserController::class, 'index'])
+        ->name('user.index');
 
     // ALAT LAB
     Route::resource('/alatlab', \App\Http\Controllers\Admin\AlatLabController::class)
-        ->names('admin.alatlab');
+        ->names('alatlab');
 
     // PEMINJAMAN
     Route::get('/peminjaman', [\App\Http\Controllers\Admin\PeminjamController::class, 'index'])
-        ->name('admin.peminjaman.index');
+        ->name('peminjam.index');
 
-    Route::post('/peminjaman/{id}/status', [\App\Http\Controllers\Admin\PeminjamController::class, 'updateStatus'])
-        ->name('admin.peminjaman.status');
+    Route::get('/peminjaman/create', [\App\Http\Controllers\Admin\PeminjamController::class, 'create'])
+        ->name('peminjam.create');
+
+    Route::post('/peminjaman', [\App\Http\Controllers\Admin\PeminjamController::class, 'store'])
+        ->name('peminjam.store');
+
+    Route::get('/peminjaman/{id}/edit', [\App\Http\Controllers\Admin\PeminjamController::class, 'edit'])
+        ->name('peminjam.edit');
+
+    Route::put('/peminjaman/{id}', [\App\Http\Controllers\Admin\PeminjamController::class, 'update'])
+        ->name('peminjam.update');
+
+    Route::delete('/peminjaman/{id}', [\App\Http\Controllers\Admin\PeminjamController::class, 'destroy'])
+        ->name('peminjam.destroy');
+
+    Route::post('/peminjaman/{id}/kembali', [\App\Http\Controllers\Admin\PeminjamController::class, 'kembali'])
+        ->name('peminjam.kembali');
 
     // PENGEMBALIAN
-    Route::get('/pengembalian', [\App\Http\Controllers\Admin\PengembalianController::class, 'index'])
-        ->name('admin.pengembalian.index');
+    Route::get('/pengembalian', [\App\Http\Controllers\Admin\PeminjamController::class, 'pengembalian'])
+        ->name('pengembalian');
 });
 
 
@@ -74,4 +93,7 @@ Route::prefix('user')->middleware(['auth', 'role:user'])->group(function () {
 
     Route::post('/pinjam', [\App\Http\Controllers\User\PeminjamanController::class, 'store'])
         ->name('user.pinjam');
+
+    Route::post('/kembali/{id}', [\App\Http\Controllers\User\PeminjamanController::class, 'kembali'])
+        ->name('user.kembali');
 });

@@ -16,7 +16,7 @@ class PengembalianController extends Controller
             ->latest()
             ->get();
 
-        return view('admin.pengembalian.index', compact('pengembalian'));
+        return view('admin.pages.pengembalian.index', compact('pengembalian'));
     }
 
     // Simpan pengembalian baru

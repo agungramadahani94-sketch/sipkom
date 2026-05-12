@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Peminjam;
 use App\Models\User;
 use App\Models\AlatLab;
@@ -26,9 +27,9 @@ class PeminjamController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_user' => 'required',
-            'id_alat' => 'required',
-            'tgl_pinjam' => 'required|date',
+            'id_user'          => 'required|exists:users,id_user',
+            'id_alat'          => 'required|exists:alatlabs,id_alat',
+            'tgl_pinjam'       => 'required|date',
             'tgl_pengembalian' => 'required|date|after_or_equal:tgl_pinjam',
         ]);
 
@@ -39,11 +40,11 @@ class PeminjamController extends Controller
         }
 
         Peminjam::create([
-            'id_user' => $request->id_user,
-            'id_alat' => $request->id_alat,
-            'tgl_pinjam' => $request->tgl_pinjam,
+            'id_user'          => $request->id_user,
+            'id_alat'          => $request->id_alat,
+            'tgl_pinjam'       => $request->tgl_pinjam,
             'tgl_pengembalian' => $request->tgl_pengembalian,
-            'status' => 'dipinjam' // 🔥 tambahan
+            'status'           => 'dipinjam',
         ]);
 
         $alat->decrement('stok');
@@ -54,8 +55,8 @@ class PeminjamController extends Controller
     public function edit($id)
     {
         $peminjam = Peminjam::findOrFail($id);
-        $users = User::all();
-        $alats = AlatLab::all();
+        $users    = User::all();
+        $alats    = AlatLab::all();
 
         return view('admin.pages.peminjam.edit', compact('peminjam', 'users', 'alats'));
     }
@@ -63,17 +64,16 @@ class PeminjamController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'id_user' => 'required',
-            'id_alat' => 'required',
-            'tgl_pinjam' => 'required|date',
+            'id_user'          => 'required|exists:users,id_user',
+            'id_alat'          => 'required|exists:alatlabs,id_alat',
+            'tgl_pinjam'       => 'required|date',
             'tgl_pengembalian' => 'required|date|after_or_equal:tgl_pinjam',
         ]);
 
         $peminjam = Peminjam::findOrFail($id);
 
-        // 🔥 kalau alat diganti → balikin stok lama & kurangi stok baru
+        // Kalau alat diganti → kembalikan stok lama & kurangi stok baru
         if ($peminjam->id_alat != $request->id_alat) {
-
             $alatLama = AlatLab::find($peminjam->id_alat);
             if ($alatLama) $alatLama->increment('stok');
 
@@ -81,14 +81,13 @@ class PeminjamController extends Controller
             if ($alatBaru->stok <= 0) {
                 return back()->with('error', 'Stok alat baru habis!');
             }
-
             $alatBaru->decrement('stok');
         }
 
         $peminjam->update([
-            'id_user' => $request->id_user,
-            'id_alat' => $request->id_alat,
-            'tgl_pinjam' => $request->tgl_pinjam,
+            'id_user'          => $request->id_user,
+            'id_alat'          => $request->id_alat,
+            'tgl_pinjam'       => $request->tgl_pinjam,
             'tgl_pengembalian' => $request->tgl_pengembalian,
         ]);
 
@@ -100,7 +99,7 @@ class PeminjamController extends Controller
         $peminjam = Peminjam::findOrFail($id);
 
         $alat = AlatLab::find($peminjam->id_alat);
-        if ($alat) {
+        if ($alat && $peminjam->status === 'dipinjam') {
             $alat->increment('stok');
         }
 
@@ -109,20 +108,17 @@ class PeminjamController extends Controller
         return redirect()->route('peminjam.index')->with('success', 'Data berhasil dihapus');
     }
 
-    // 🔥 FITUR BARU: TANDAI KEMBALI
+    // Tandai kembali
     public function kembali($id)
     {
         $peminjam = Peminjam::findOrFail($id);
 
-        if ($peminjam->status == 'kembali') {
+        if ($peminjam->status === 'kembali') {
             return back()->with('error', 'Sudah dikembalikan!');
         }
 
-        $peminjam->update([
-            'status' => 'kembali'
-        ]);
+        $peminjam->update(['status' => 'kembali']);
 
-        // 🔥 balikin stok
         $alat = AlatLab::find($peminjam->id_alat);
         if ($alat) {
             $alat->increment('stok');
@@ -134,7 +130,7 @@ class PeminjamController extends Controller
     public function pengembalian()
     {
         $peminjams = Peminjam::with(['user', 'alat'])
-          
+            ->where('status', 'dipinjam')
             ->latest()
             ->paginate(10);
 

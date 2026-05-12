@@ -1,18 +1,26 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\AlatLab;
+use App\Models\Peminjam;
 
 class BerandaController extends Controller
 {
     public function index()
     {
-        $data =array(
-            'title' => 'beranda',
-            'menuDashboard' => 'active'
-        );
-        return view('admin.pages.beranda.index', $data);
+        $totalUser        = User::where('role', 'user')->count();
+        $totalAlat        = AlatLab::count();
+        $totalPeminjaman  = Peminjam::count();
+        $totalPengembalian = Peminjam::where('status', 'kembali')->count();
+
+        return view('admin.pages.beranda.index', compact(
+            'totalUser',
+            'totalAlat',
+            'totalPeminjaman',
+            'totalPengembalian'
+        ));
     }
 }

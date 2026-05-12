@@ -13,6 +13,7 @@
 
                     <div class="card-header d-flex justify-content-between">
                         <h4>List Peminjaman</h4>
+                        <a href="{{ route('peminjam.create') }}" class="btn btn-primary">+ Tambah</a>
                     </div>
 
                     <div class="card-body">
@@ -39,20 +40,16 @@
                                         <th class="text-white">Tanggal Pinjam</th>
                                         <th class="text-white">Tanggal Pengembalian</th>
                                         <th class="text-white">Status</th>
-
+                                        <th class="text-white">Aksi</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     @forelse ($peminjams as $i => $p)
                                         <tr>
-                                            {{-- 🔥 nomor auto pagination --}}
                                             <td>{{ $peminjams->firstItem() + $i }}</td>
-
-                                            {{-- 🔥 aman kalau relasi null --}}
                                             <td>{{ $p->user->nama ?? '-' }}</td>
                                             <td>{{ $p->alat->nama_alat ?? '-' }}</td>
-
                                             <td>{{ $p->tgl_pinjam }}</td>
                                             <td>{{ $p->tgl_pengembalian ?? '-' }}</td>
 
@@ -68,11 +65,9 @@
 
                                             <td>
                                                 @if($p->status == 'dipinjam')
-                                                    <form action="{{ route('peminjam.kembali', $p->id_peminjam) }}" method="POST">
+                                                    <form action="{{ route('peminjam.kembali', $p->id_peminjam) }}" method="POST" style="display:inline;">
                                                         @csrf
-                                                        <button class="btn btn-success btn-sm">
-                                                            Tandai Kembali
-                                                        </button>
+                                                        <button class="btn btn-success btn-sm">Tandai Kembali</button>
                                                     </form>
                                                 @else
                                                     <span class="text-muted">Selesai</span>
@@ -89,7 +84,7 @@
                             </table>
                         </div>
 
-                        {{-- 🔥 PAGINATION --}}
+                        {{-- PAGINATION --}}
                         <div class="mt-3 d-flex justify-content-end">
                             {{ $peminjams->links() }}
                         </div>
@@ -109,7 +104,7 @@
             let rows = document.querySelectorAll("#table-peminjaman tbody tr");
 
             rows.forEach(row => {
-                let status = row.children[5].innerText.toLowerCase();
+                let status = row.children[5]?.innerText.toLowerCase() ?? '';
 
                 if (value === "" || status.includes(value)) {
                     row.style.display = "";
