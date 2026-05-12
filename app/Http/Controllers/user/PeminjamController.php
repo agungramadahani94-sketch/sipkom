@@ -7,7 +7,7 @@ use App\Models\Peminjam;
 use App\Models\AlatLab;
 use Illuminate\Http\Request;
 
-class PeminjamanController extends Controller
+class PeminjamController extends Controller
 {
     // Riwayat peminjaman user
     public function index()

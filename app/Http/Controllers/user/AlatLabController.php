@@ -5,7 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\AlatLab;
 
-class AlatController extends Controller
+class AlatLabController extends Controller
 {
     public function index()
     {
