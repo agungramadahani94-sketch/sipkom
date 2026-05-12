@@ -2077,6 +2077,7 @@ a.bb {
   font-weight: 600; }
 
 .img-shadow {
+  border-radius: 3px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03); }
 
 .colors {

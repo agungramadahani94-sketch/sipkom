@@ -7,23 +7,22 @@
     <div class="section-header justify-content-center">
         <h1>Halaman Pengembalian</h1>
     </div>
-    
+
     <div class="section-body">
         <div class="card">
 
             <div class="card-header">
-                <h4>Data Pengembalian (Belum Dikembalikan)</h4>
+                <h4>Data Peminjaman Belum Dikembalikan</h4>
             </div>
 
             <div class="card-body">
-
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered">
 
                         <thead class="text-center">
                             <tr class="bg-primary">
                                 <th class="text-white">No</th>
-                                <th class="text-white">Nama</th>
+                                <th class="text-white">Nama Peminjam</th>
                                 <th class="text-white">Alat</th>
                                 <th class="text-white">Tgl Pinjam</th>
                                 <th class="text-white">Batas Kembali</th>
@@ -41,7 +40,6 @@
                                 <td>{{ $p->tgl_pinjam }}</td>
                                 <td>{{ $p->tgl_pengembalian ?? '-' }}</td>
 
-                                {{-- STATUS TELAT --}}
                                 <td>
                                     @if($p->tgl_pengembalian && now()->gt($p->tgl_pengembalian))
                                         <span class="badge badge-danger">Telat</span>
@@ -53,15 +51,19 @@
                                 <td>
                                     <form action="{{ route('peminjam.kembali', $p->id_peminjam) }}" method="POST">
                                         @csrf
-                                        <button class="btn btn-success btn-sm">
-                                            Kembalikan
+                                        <button type="submit"
+                                                class="btn btn-success btn-sm"
+                                                onclick="return confirm('Tandai alat ini sudah dikembalikan?')">
+                                            <i class="fas fa-undo"></i> Kembalikan
                                         </button>
                                     </form>
                                 </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="7" class="text-center">Tidak ada data</td>
+                                <td colspan="7" class="text-center text-muted">
+                                    Tidak ada peminjaman yang belum dikembalikan.
+                                </td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -69,13 +71,11 @@
                     </table>
                 </div>
 
-                {{-- PAGINATION --}}
                 <div class="mt-3 d-flex justify-content-end">
                     {{ $peminjams->links() }}
                 </div>
 
             </div>
-
         </div>
     </div>
 
