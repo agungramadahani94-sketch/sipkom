@@ -10,9 +10,14 @@ use Illuminate\Http\Request;
 
 class PeminjamController extends Controller
 {
+    // Hanya tampilkan yang MASIH DIPINJAM
     public function index()
     {
-        $peminjams = Peminjam::with(['user', 'alat'])->latest()->paginate(10);
+        $peminjams = Peminjam::with(['user', 'alat'])
+            ->where('status', 'dipinjam')
+            ->latest()
+            ->paginate(10);
+
         return view('admin.pages.peminjam.index', compact('peminjams'));
     }
 
@@ -72,7 +77,7 @@ class PeminjamController extends Controller
 
         $peminjam = Peminjam::findOrFail($id);
 
-        // Kalau alat diganti → kembalikan stok lama & kurangi stok baru
+        // Jika alat diganti → kembalikan stok lama & kurangi stok baru
         if ($peminjam->id_alat != $request->id_alat) {
             $alatLama = AlatLab::find($peminjam->id_alat);
             if ($alatLama) $alatLama->increment('stok');
@@ -108,32 +113,36 @@ class PeminjamController extends Controller
         return redirect()->route('peminjam.index')->with('success', 'Data berhasil dihapus');
     }
 
-    // Tandai kembali
+    // Tandai kembali → stok naik, status jadi 'kembali', catat tgl_pengembalian hari ini
     public function kembali($id)
     {
         $peminjam = Peminjam::findOrFail($id);
 
         if ($peminjam->status === 'kembali') {
-            return back()->with('error', 'Sudah dikembalikan!');
+            return back()->with('error', 'Alat sudah dikembalikan sebelumnya!');
         }
 
-        $peminjam->update(['status' => 'kembali']);
+        $peminjam->update([
+            'status'           => 'kembali',
+            'tgl_pengembalian' => now()->toDateString(),
+        ]);
 
         $alat = AlatLab::find($peminjam->id_alat);
         if ($alat) {
             $alat->increment('stok');
         }
 
-        return back()->with('success', 'Alat berhasil dikembalikan');
+        return back()->with('success', 'Alat berhasil ditandai dikembalikan');
     }
 
+    // Tampilkan yang SUDAH DIKEMBALIKAN (halaman pengembalian)
     public function pengembalian()
     {
-        $peminjams = Peminjam::with(['user', 'alat'])
-            ->where('status', 'dipinjam')
+        $pengembalian = Peminjam::with(['user', 'alat'])
+            ->where('status', 'kembali')
             ->latest()
             ->paginate(10);
 
-        return view('admin.pages.pengembalian.index', compact('peminjams'));
+        return view('admin.pages.pengembalian.index', compact('pengembalian'));
     }
 }

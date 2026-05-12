@@ -9,7 +9,14 @@ use Illuminate\Http\Request;
 
 class PeminjamController extends Controller
 {
-    // Riwayat peminjaman user
+    // ✅ FORM PINJAM
+    public function create($id)
+    {
+        $alat = AlatLab::findOrFail($id);
+        return view('user.pages.alatlab.create', compact('alat'));
+    }
+
+    // ✅ RIWAYAT
     public function index()
     {
         $data = Peminjam::with('alat')
@@ -20,7 +27,7 @@ class PeminjamController extends Controller
         return view('user.pages.peminjam.index', compact('data'));
     }
 
-    // Proses pinjam
+    // ✅ SIMPAN PINJAM
     public function store(Request $request)
     {
         $request->validate([
@@ -52,10 +59,10 @@ class PeminjamController extends Controller
 
         $alat->decrement('stok');
 
-        return back()->with('success', 'Berhasil meminjam alat');
+        return redirect()->route('user.alat')->with('success', 'Berhasil meminjam alat');
     }
 
-    // Kembalikan (user)
+    // ✅ KEMBALI
     public function kembali($id)
     {
         $peminjam = Peminjam::where('id_user', auth()->id())
@@ -67,7 +74,7 @@ class PeminjamController extends Controller
         }
 
         $peminjam->update([
-            'status'           => 'kembali',
+            'status' => 'kembali',
             'tgl_pengembalian' => now()->toDateString(),
         ]);
 

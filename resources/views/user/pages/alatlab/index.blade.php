@@ -5,78 +5,64 @@
     <section class="section">
 
         <div class="section-header">
-            <h1>Daftar Alat Laboratorium</h1>
+            <h1>Daftar Alat</h1>
         </div>
 
         <div class="section-body">
             <div class="row">
+
                 @forelse($alat as $item)
                 <div class="col-md-4 mb-4">
-                    <div class="card shadow-sm h-100 d-flex flex-column">
+                    <div class="card shadow-sm h-100">
 
-                        {{-- GAMBAR FIX --}}
-                        <div style="height: 200px; overflow: hidden;">
-                            @if($item->gambar && file_exists(public_path('storage/' . $item->gambar)))
-                                <img src="{{ asset('storage/' . $item->gambar) }}"
-                                     alt="{{ $item->nama_alat }}"
-                                     style="width: 100%; height: 100%; object-fit: cover;">
+                        {{-- ✅ GAMBAR --}}
+                        <div style="height:200px; overflow:hidden;">
+                            @if($item->gambar && file_exists(public_path('storage/'.$item->gambar)))
+                                <img src="{{ asset('storage/'.$item->gambar) }}"
+                                     style="width:100%; height:100%; object-fit:cover;">
                             @else
                                 <img src="{{ asset('images/no-image.png') }}"
-                                     alt="No Image"
-                                     style="width: 100%; height: 100%; object-fit: cover;">
+                                     style="width:100%; height:100%; object-fit:cover;">
                             @endif
                         </div>
 
                         {{-- BODY --}}
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">{{ $item->nama_alat }}</h5>
+                            <h5 class="text-primary">{{ $item->nama_alat }}</h5>
 
-                            <p class="card-text text-muted mb-1">
-                                <i class="fas fa-tag"></i> {{ $item->kategori }}
+                            <p class="mb-1">Kategori: {{ $item->kategori }}</p>
+
+                            <p class="mb-2">
+                                Stok:
+                                <b class="{{ $item->stok == 0 ? 'text-danger' : 'text-success' }}">
+                                    {{ $item->stok }}
+                                </b>
                             </p>
 
-                            <p class="card-text mb-1">
-                                Kondisi:
-                                @if($item->kondisi == 'baik')
-                                    <span class="badge badge-success">Baik</span>
-                                @elseif($item->kondisi == 'rusak')
-                                    <span class="badge badge-danger">Rusak</span>
+                            {{-- BUTTON --}}
+                            <div class="mt-auto">
+                                @if($item->stok > 0)
+                                    <a href="{{ route('user.pinjam', $item->id_alat) }}"
+                                       class="btn btn-primary w-100">
+                                        Pinjam
+                                    </a>
                                 @else
-                                    <span class="badge badge-warning">Diperbaiki</span>
+                                    <button class="btn btn-secondary w-100" disabled>
+                                        Stok Habis
+                                    </button>
                                 @endif
-                            </p>
+                            </div>
 
-                            <p class="card-text">
-                                Stok: <b>{{ $item->stok }}</b>
-                            </p>
-
-                            <div class="mt-auto"></div>
-                        </div>
-
-                        {{-- FOOTER --}}
-                        <div class="card-footer bg-white">
-                            <form action="{{ route('user.pinjam') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="alat_id" value="{{ $item->id_alat }}">
-
-                                <button type="submit"
-                                        class="btn btn-primary btn-block"
-                                        {{ $item->stok == 0 ? 'disabled' : '' }}>
-                                    <i class="fas fa-hand-holding"></i>
-                                    {{ $item->stok == 0 ? 'Stok Habis' : 'Pinjam' }}
-                                </button>
-                            </form>
                         </div>
 
                     </div>
                 </div>
                 @empty
-                <div class="col-12">
-                    <div class="alert alert-info text-center">
-                        Belum ada alat laboratorium tersedia.
-                    </div>
+                <div class="col-12 text-center">
+                    <p class="text-muted">Belum ada alat.</p>
                 </div>
                 @endforelse
+
             </div>
         </div>
 

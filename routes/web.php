@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\User\AlatLabController;
 use App\Http\Controllers\User\BerandaController;
 use App\Http\Controllers\User\PeminjamanController;
+use App\Http\Controllers\User\PeminjamController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,18 +86,25 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
 Route::prefix('user')->middleware(['auth', 'role:user'])->group(function () {
 
-    Route::get('/dashboard', [\App\Http\Controllers\User\BerandaController::class, 'index'])
+    Route::get('/dashboard', [BerandaController::class, 'index'])
         ->name('user.dashboard');
 
-   Route::get('/alat', [\App\Http\Controllers\User\AlatLabController::class, 'index'])
-    ->name('user.alat');
+    Route::get('/alat', [AlatLabController::class, 'index'])
+        ->name('user.alat');
 
-    Route::get('/peminjaman', [\App\Http\Controllers\User\PeminjamController::class, 'index'])
-        ->name('user.peminjaman');
-
-    Route::post('/pinjam', [\App\Http\Controllers\User\PeminjamController::class, 'store'])
+    // ✅ FORM
+    Route::get('/pinjam/{id}', [PeminjamController::class, 'create'])
         ->name('user.pinjam');
 
-    Route::post('/kembali/{id}', [\App\Http\Controllers\User\PeminjamController::class, 'kembali'])
+    // ✅ SIMPAN
+    Route::post('/pinjam', [PeminjamController::class, 'store'])
+        ->name('user.pinjam.store');
+
+    // RIWAYAT
+    Route::get('/peminjaman', [PeminjamController::class, 'index'])
+        ->name('user.peminjaman');
+
+    // KEMBALI
+    Route::post('/kembali/{id}', [PeminjamController::class, 'kembali'])
         ->name('user.kembali');
 });
