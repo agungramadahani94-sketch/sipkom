@@ -33,8 +33,28 @@
                                 <tr>
                                     <td>{{ $i + 1 }}</td>
                                     <td>{{ $d->alat->nama_alat ?? '-' }}</td>
-                                    <td>{{ $d->tgl_pinjam }}</td>
-                                    <td>{{ $d->tgl_pengembalian ?? '-' }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($d->tgl_pinjam)->format('d M Y') }}</td>
+                                    <td>
+                                        @if($d->tgl_pengembalian)
+                                            @if(\Carbon\Carbon::parse($d->tgl_pengembalian)->lt(now()))
+                                                <span class="text-danger font-weight-bold">
+                                                    {{ \Carbon\Carbon::parse($d->tgl_pengembalian)->format('d M Y') }}
+                                                    <small>(Telat)</small>
+                                                </span>
+                                            @else
+                                                {{ \Carbon\Carbon::parse($d->tgl_pengembalian)->format('d M Y') }}
+                                            @endif
+                                        @else
+                                            @php
+                                                $due = \Carbon\Carbon::parse($d->tgl_pinjam)->addDays(7);
+                                            @endphp
+                                            @if($due->lt(now()))
+                                                <span class="text-danger font-weight-bold">{{ $due->format('d M Y') }} <small>(Telat)</small></span>
+                                            @else
+                                                {{ $due->format('d M Y') }}
+                                            @endif
+                                        @endif
+                                    </td>
                                     <td>
                                         @if($d->status == 'dipinjam')
                                             <span class="badge badge-warning">Dipinjam</span>

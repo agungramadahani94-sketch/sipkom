@@ -1,197 +1,448 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 
 <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>SIPALKOM | Laboratorium Digital</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIPALKOM</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { syne: ['Syne', 'sans-serif'], mono: ['"DM Mono"', 'monospace'], sans: ['"DM Sans"', 'sans-serif'] }, colors: { ink: '#0a0a0a', ink2: '#1a1a2e', paper: '#fafaf7', cream: '#f5f0e8', blue: { DEFAULT: '#1640d4', dark: '#0d2fa8', light: '#dce8ff' }, yellow: { DEFAULT: '#f5c518', dark: '#c49b00' }, green: '#0ea95e' }, boxShadow: { hard: '5px 5px 0 #0a0a0a', 'hard-lg': '8px 8px 0 #0a0a0a', 'hard-sm': '3px 3px 0 #0a0a0a' } } } }
+    </script>
     <style>
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #020617;
-        }
-        
-        .glass-nav {
-            background: rgba(2, 6, 23, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        html {
+            scroll-behavior: smooth
         }
 
-        /* Gradient Latar Belakang yang Lebih Halus */
-        .hero-bg {
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 90% 80%, rgba(79, 70, 229, 0.1) 0%, transparent 50%);
+        ::-webkit-scrollbar {
+            width: 8px
         }
 
-        .text-gradient {
-            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        ::-webkit-scrollbar-track {
+            background: #f5f0e8
         }
 
-        .glow-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        ::-webkit-scrollbar-thumb {
+            background: #0a0a0a
         }
 
-        .glow-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(59, 130, 246, 0.5);
-            box-shadow: 0 0 30px rgba(37, 99, 235, 0.1);
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1)
+            }
+
+            50% {
+                opacity: .6;
+                transform: scale(.85)
+            }
+        }
+
+        @keyframes ticker {
+            from {
+                transform: translateX(0)
+            }
+
+            to {
+                transform: translateX(-50%)
+            }
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(1deg); }
-        }
-        .animate-float { animation: float 5s ease-in-out infinite; }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
-            box-shadow: 0 10px 20px -10px rgba(37, 99, 235, 0.5);
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-12px)
+            }
+        }
+
+        .pulse-anim {
+            animation: pulse-dot 2s infinite
+        }
+
+        .ticker-anim {
+            animation: ticker 24s linear infinite
+        }
+
+        .ticker-anim:hover {
+            animation-play-state: paused
+        }
+
+        .float-anim {
+            animation: float 4s ease-in-out infinite
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity .5s ease, transform .5s ease
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: none
+        }
+
+        .accent-underline {
+            position: relative;
+            display: inline-block
+        }
+
+        .accent-underline::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: #f5c518;
+            z-index: -1
+        }
+
+        .card {
+            transition: all .15s ease
+        }
+
+        .card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0 #0a0a0a
+        }
+
+        .stat::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #f5c518;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .3s ease
+        }
+
+        .stat:hover::before {
+            transform: scaleX(1)
         }
     </style>
 </head>
 
-<body class="text-slate-300 selection:bg-blue-500/30">
+<body class="font-sans bg-paper text-ink overflow-x-hidden">
 
-    <!-- ===== NAVBAR ===== -->
-    <nav class="fixed w-full top-0 z-50 glass-nav">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3 group cursor-pointer">
-                <div class="w-11 h-11 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-900/40 group-hover:scale-110 transition-transform">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-xl font-black text-white tracking-tight leading-none">SIPALKOM</span>
-                    <span class="text-[9px] uppercase tracking-[0.3em] text-blue-400 font-bold mt-1">Digital Laboratory</span>
-                </div>
+    <!-- NAV -->
+    <nav class="sticky top-0 z-[100] bg-blue border-b-[2.5px] border-ink">
+        <div class="max-w-[1100px] mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#"
+                class="bg-yellow border-2 border-ink shadow-hard-sm px-4 py-1.5 font-syne font-extrabold text-[13px] tracking-[.15em] text-ink no-underline">SIPALKOM</a>
+            <div class="hidden md:flex gap-1">
+                <a href="#"
+                    class="font-syne font-bold text-[12px] tracking-[.08em] uppercase px-3.5 py-2 text-white no-underline border-2 border-transparent hover:bg-yellow hover:border-ink hover:text-ink hover:shadow-hard-sm transition-all">Home</a>
+                <a href="#about"
+                    class="font-syne font-bold text-[12px] tracking-[.08em] uppercase px-3.5 py-2 text-white no-underline border-2 border-transparent hover:bg-yellow hover:border-ink hover:text-ink hover:shadow-hard-sm transition-all">About</a>
+                <a href="#fitur"
+                    class="font-syne font-bold text-[12px] tracking-[.08em] uppercase px-3.5 py-2 text-white no-underline border-2 border-transparent hover:bg-yellow hover:border-ink hover:text-ink hover:shadow-hard-sm transition-all">Fitur</a>
+                <a href="{{ route('login') }}"
+                    class="font-syne font-bold text-[12px] tracking-[.08em] uppercase px-3.5 py-2 text-white no-underline border-2 border-transparent hover:bg-yellow hover:border-ink hover:text-ink hover:shadow-hard-sm transition-all">Login</a>
             </div>
-            
-            <div class="hidden md:flex items-center gap-10">
-                <div class="flex gap-8">
-                    <a href="#hero" class="text-sm font-medium hover:text-blue-400 transition-colors">Beranda</a>
-                    <a href="#fitur" class="text-sm font-medium hover:text-blue-400 transition-colors">Fitur</a>
-                    <a href="#about" class="text-sm font-medium hover:text-blue-400 transition-colors">Tentang</a>
-                </div>
-                <a href="{{ route('login') }}" class="btn-primary text-white text-sm font-bold px-8 py-3 rounded-xl hover:brightness-110 transition-all active:scale-95">
-                  Login
-                </a>
-            </div>
+            <button class="md:hidden bg-yellow border-2 border-ink shadow-hard-sm p-[9px_11px] flex flex-col gap-[5px]"
+                onclick="toggleMenu()">
+                <span class="block w-5 h-[2.5px] bg-ink"></span>
+                <span class="block w-5 h-[2.5px] bg-ink"></span>
+                <span class="block w-5 h-[2.5px] bg-ink"></span>
+            </button>
+        </div>
+        <div id="mob" class="hidden flex-col bg-blue border-t-2 border-ink px-4 pb-3.5 pt-2.5 gap-1.5">
+            <a href="#"
+                class="font-syne font-bold text-[13px] uppercase py-3 px-4 text-center border-2 border-ink bg-yellow text-ink no-underline">Home</a>
+            <a href="#about" onclick="toggleMenu()"
+                class="font-syne font-bold text-[13px] uppercase py-3 px-4 text-center border-2 border-ink bg-white text-ink no-underline">About</a>
+            <a href="#fitur" onclick="toggleMenu()"
+                class="font-syne font-bold text-[13px] uppercase py-3 px-4 text-center border-2 border-ink bg-white text-ink no-underline">Fitur</a>
+            <a href="{{ route('login') }}"
+                class="font-syne font-bold text-[13px] uppercase py-3 px-4 text-center border-2 border-white/30 text-white no-underline">Login</a>
         </div>
     </nav>
 
-    <!-- ===== HERO ===== -->
-    <section id="hero" class="hero-bg min-h-screen flex items-center pt-24">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div class="space-y-8 text-center lg:text-left">
-               
-                
-                <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.05]">
-                    Kelola Aset Lab <br>
-                    <span class="text-gradient">Secara Cerdas.</span>
+    <!-- HERO -->
+    <section class="relative overflow-hidden"
+        style="background-image:radial-gradient(rgba(22,64,212,.08) 1.5px,transparent 1.5px);background-size:28px 28px">
+        <div class="max-w-[1100px] mx-auto px-6 py-16 flex flex-col lg:flex-row items-center gap-10">
+
+            <!-- Teks kiri -->
+            <div class="reveal flex-1">
+                <div
+                    class="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[.12em] bg-blue-light border-2 border-ink px-3.5 py-1.5 mb-6">
+                    <span class="w-[7px] h-[7px] rounded-full bg-green flex-shrink-0 pulse-anim"></span>
+                    Sipalkom
+                </div>
+                <h1
+                    class="font-syne font-extrabold text-[clamp(36px,5vw,64px)] leading-none tracking-tight text-ink2 mb-5">
+                    Sistem Peminjaman<br>
+                    <span class="text-blue accent-underline">Laboratorium Komputer</span>
                 </h1>
-                
-                <p class="text-lg text-slate-400 max-w-lg leading-relaxed mx-auto lg:mx-0">
-                    Solusi modern untuk manajemen inventaris dan peminjaman alat laboratorium dengan pelacakan real-time.
+                <div
+                    class="bg-yellow border-2 border-ink shadow-hard-sm font-syne font-bold text-[11px] uppercase tracking-[.1em] px-[18px] py-[7px] mb-5 inline-block">
+                    Kelola · Pinjam · Pantau · Laporkan
+                </div>
+                <p class="text-base leading-[1.75] text-[#555] mb-8 max-w-[500px]">
+                    Platform digital terintegrasi untuk pengelolaan aset lab komputer, peminjaman online, dan monitoring
+                    anggota.
                 </p>
-
-                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                    <button class="btn-primary px-10 py-4 rounded-2xl text-white font-bold text-lg hover:translate-y-[-2px] transition-all">
-                        Mulai Sekarang
-                    </button>
-                    <button class="px-10 py-4 rounded-2xl bg-white/5 border border-white/10 font-bold text-white hover:bg-white/10 transition-all">
-                        Lihat Panduan
-                    </button>
+                <div class="flex flex-wrap gap-2 mb-8">
+                    <span class="font-mono text-[11px] px-3.5 py-[5px] border-2 border-ink bg-blue-light">Manajemen
+                        Aset</span>
+                    <span
+                        class="font-mono text-[11px] px-3.5 py-[5px] border-2 border-ink bg-[#fff8dc]">Peminjaman</span>
+                    <span class="font-mono text-[11px] px-3.5 py-[5px] border-2 border-ink bg-[#ffe8e8]">Data
+                        Anggota</span>
+                    <span class="font-mono text-[11px] px-3.5 py-[5px] border-2 border-ink bg-white">Dashboard</span>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <a href="#about"
+                        class="font-syne font-bold text-[13px] uppercase tracking-[.08em] px-7 py-3.5 border-[2.5px] border-ink shadow-hard bg-yellow text-ink no-underline inline-flex items-center gap-2 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-hard-sm transition-all">
+                        <i class="ti ti-info-circle"></i>Tentang Kami
+                    </a>
+                    <a href="#fitur"
+                        class="font-syne font-bold text-[13px] uppercase tracking-[.08em] px-7 py-3.5 border-[2.5px] border-ink shadow-hard bg-white text-ink no-underline inline-flex items-center gap-2 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-hard-sm transition-all">
+                        <i class="ti ti-layout-grid"></i>Lihat Fitur
+                    </a>
                 </div>
             </div>
 
-            <div class="relative group">
-                <div class="absolute -inset-4 bg-blue-500/20 rounded-[3rem] blur-2xl group-hover:bg-blue-500/30 transition-all"></div>
-                <div class="relative animate-float">
-                    <img src="{{ asset('images/land.png') }}" alt="Preview" class="rounded-[2.5rem] border border-white/10 shadow-2xl bg-slate-900/50 backdrop-blur-sm">
-                    
-                    <!-- Floating Card -->
-                    <div class="absolute top-10 -left-10 bg-slate-900/90 border border-white/10 p-4 rounded-2xl shadow-2xl hidden xl:block">
-                        <div class="flex items-center gap-3">
-                            <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                            <span class="text-xs font-bold">System Online</span>
-                        </div>
+            <!-- Gambar kanan -->
+            <div class="reveal flex-1 flex justify-center lg:justify-end">
+                <img src="images/komland.png" alt="Ilustrasi SIPALKOM" class="w-full max-w-2xl float-anim p-2 lg:p-4">
+            </div>
+
+        </div>
+    </section>
+
+    <!-- TICKER -->
+    <div class="bg-ink border-y-[2.5px] border-ink overflow-hidden py-[11px]">
+        <div class="ticker-anim flex w-max">
+            <div class="flex items-center gap-2.5 px-7 text-white font-mono text-[11px] uppercase whitespace-nowrap">
+                <div class="w-[5px] h-[5px] rounded-full bg-yellow"></div>Manajemen Aset
+            </div>
+            <div class="flex items-center gap-2.5 px-7 text-white font-mono text-[11px] uppercase whitespace-nowrap">
+                <div class="w-[5px] h-[5px] rounded-full bg-yellow"></div>Peminjaman Online
+            </div>
+            <div class="flex items-center gap-2.5 px-7 text-white font-mono text-[11px] uppercase whitespace-nowrap">
+                <div class="w-[5px] h-[5px] rounded-full bg-yellow"></div>Dashboard Real-time
+            </div>
+            <div class="flex items-center gap-2.5 px-7 text-white font-mono text-[11px] uppercase whitespace-nowrap">
+                <div class="w-[5px] h-[5px] rounded-full bg-yellow"></div>Data Anggota
+            </div>
+            <div class="flex items-center gap-2.5 px-7 text-white font-mono text-[11px] uppercase whitespace-nowrap">
+                <div class="w-[5px] h-[5px] rounded-full bg-yellow"></div>Laporan Aktivitas
+            </div>
+            <div class="flex items-center gap-2.5 px-7 text-white font-mono text-[11px] uppercase whitespace-nowrap">
+                <div class="w-[5px] h-[5px] rounded-full bg-yellow"></div>Autentikasi Aman
+            </div>
+            <div class="flex items-center gap-2.5 px-7 text-white font-mono text-[11px] uppercase whitespace-nowrap">
+                <div class="w-[5px] h-[5px] rounded-full bg-yellow"></div>Manajemen Aset
+            </div>
+            <div class="flex items-center gap-2.5 px-7 text-white font-mono text-[11px] uppercase whitespace-nowrap">
+                <div class="w-[5px] h-[5px] rounded-full bg-yellow"></div>Peminjaman Online
+            </div>
+            <div class="flex items-center gap-2.5 px-7 text-white font-mono text-[11px] uppercase whitespace-nowrap">
+                <div class="w-[5px] h-[5px] rounded-full bg-yellow"></div>Dashboard Real-time
+            </div>
+            <div class="flex items-center gap-2.5 px-7 text-white font-mono text-[11px] uppercase whitespace-nowrap">
+                <div class="w-[5px] h-[5px] rounded-full bg-yellow"></div>Data User
+            </div>
+            <div class="flex items-center gap-2.5 px-7 text-white font-mono text-[11px] uppercase whitespace-nowrap">
+                <div class="w-[5px] h-[5px] rounded-full bg-yellow"></div>Laporan Aktivitas
+            </div>
+            <div class="flex items-center gap-2.5 px-7 text-white font-mono text-[11px] uppercase whitespace-nowrap">
+                <div class="w-[5px] h-[5px] rounded-full bg-yellow"></div>Notifikasi Otomatis
+            </div>
+            <div class="flex items-center gap-2.5 px-7 text-white font-mono text-[11px] uppercase whitespace-nowrap">
+                <div class="w-[5px] h-[5px] rounded-full bg-yellow"></div>Autentikasi Aman
+            </div>
+            <div class="flex items-center gap-2.5 px-7 text-white font-mono text-[11px] uppercase whitespace-nowrap">
+                <div class="w-[5px] h-[5px] rounded-full bg-yellow"></div>Multi Divisi
+            </div>
+        </div>
+    </div>
+
+    <!-- FITUR -->
+    <section id="fitur" class="bg-paper py-20">
+        <div class="max-w-[1100px] mx-auto px-6">
+            <div class="font-mono text-[11px] uppercase text-blue mb-3 flex items-center gap-2">
+                <span class="inline-block w-5 h-[2.5px] bg-blue"></span>Fitur Unggulan
+            </div>
+            <h2
+                class="reveal font-syne font-extrabold text-[clamp(28px,4vw,48px)] leading-[1.05] tracking-tight text-ink2 mb-10">
+                Apa Yang Bisa Dilakukan?</h2>
+            <div class="reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="card bg-blue-light border-[2.5px] border-ink shadow-hard p-7">
+                    <div
+                        class="w-11 h-11 bg-blue border-2 border-ink flex items-center justify-center text-white text-xl mb-4">
+                        <i class="ti ti-device-laptop"></i></div>
+                    <div class="font-syne font-bold text-[13px] uppercase tracking-[.07em] mb-2">Manajemen Aset</div>
+                    <div class="text-[12.5px] leading-[1.65] text-[#555]">Catat dan pantau semua peralatan lab secara
+                        real-time.</div>
+                </div>
+                <div class="card bg-white border-[2.5px] border-ink shadow-hard p-7">
+                    <div
+                        class="w-11 h-11 bg-blue border-2 border-ink flex items-center justify-center text-white text-xl mb-4">
+                        <i class="ti ti-clipboard-list"></i></div>
+                    <div class="font-syne font-bold text-[13px] uppercase tracking-[.07em] mb-2">Peminjaman</div>
+                    <div class="text-[12.5px] leading-[1.65] text-[#555]">Ajukan peminjaman online dan terima notifikasi
+                        persetujuan.</div>
+                </div>
+                <div class="card bg-[#fff8dc] border-[2.5px] border-ink shadow-hard p-7">
+                    <div
+                        class="w-11 h-11 bg-yellow-dark border-2 border-ink flex items-center justify-center text-white text-xl mb-4">
+                        <i class="ti ti-users"></i></div>
+                    <div class="font-syne font-bold text-[13px] uppercase tracking-[.07em] mb-2">Data Anggota</div>
+                    <div class="text-[12.5px] leading-[1.65] text-[#555]">Kelola profil dan histori aktivitas anggota
+                        laboratorium.</div>
+                </div>
+                <div class="card bg-[#e8f8f0] border-[2.5px] border-ink shadow-hard p-7">
+                    <div
+                        class="w-11 h-11 bg-[#0d7a47] border-2 border-ink flex items-center justify-center text-white text-xl mb-4">
+                        <i class="ti ti-chart-bar"></i></div>
+                    <div class="font-syne font-bold text-[13px] uppercase tracking-[.07em] mb-2">Dashboard</div>
+                    <div class="text-[12.5px] leading-[1.65] text-[#555]">Statistik dan laporan aktivitas lab dalam satu
+                        layar.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div style="border-top:2.5px solid #0a0a0a"></div>
+
+    <!-- ABOUT -->
+    <section id="about" class="bg-cream py-20">
+        <div class="max-w-[1100px] mx-auto px-6">
+            <div class="font-mono text-[11px] uppercase text-blue mb-3 flex items-center gap-2">
+                <span class="inline-block w-5 h-[2.5px] bg-blue"></span>Tentang Kami
+            </div>
+            <h2
+                class="reveal font-syne font-extrabold text-[clamp(28px,4vw,48px)] leading-[1.05] tracking-tight text-ink2 mb-5">
+                Apa Itu SIPALKOM?</h2>
+            <p class="reveal text-[#555] text-[15px] leading-[1.8] mt-4 max-w-[680px]">
+                SIPALKOM adalah sistem peminjaman alat laboratorium komputer berbasis web — mulai dari pencatatan aset,
+                proses peminjaman, hingga manajemen data anggota secara terpusat.
+            </p>
+            <div class="reveal flex flex-col gap-5 mt-7 max-w-[680px]">
+                <div class="flex gap-4 items-start">
+                    <div
+                        class="w-11 h-11 flex-shrink-0 border-[2.5px] border-ink flex items-center justify-center text-xl shadow-hard-sm bg-yellow">
+                        <i class="ti ti-bolt"></i></div>
+                    <div>
+                        <div class="font-syne font-bold text-[14px] mb-1">Cepat &amp; Real-time</div>
+                        <div class="text-[13px] text-[#555] leading-[1.7]">Data selalu diperbarui otomatis tanpa perlu
+                            refresh manual.</div>
+                    </div>
+                </div>
+                <div class="flex gap-4 items-start">
+                    <div
+                        class="w-11 h-11 flex-shrink-0 border-[2.5px] border-ink flex items-center justify-center text-xl shadow-hard-sm bg-blue-light">
+                        <i class="ti ti-shield-lock"></i></div>
+                    <div>
+                        <div class="font-syne font-bold text-[14px] mb-1">Aman &amp; Terpercaya</div>
+                        <div class="text-[13px] text-[#555] leading-[1.7]">Autentikasi berlapis dengan role-based access
+                            control.</div>
+                    </div>
+                </div>
+                <div class="flex gap-4 items-start">
+                    <div
+                        class="w-11 h-11 flex-shrink-0 border-[2.5px] border-ink flex items-center justify-center text-xl shadow-hard-sm bg-[#ffe8e8]">
+                        <i class="ti ti-device-mobile"></i></div>
+                    <div>
+                        <div class="font-syne font-bold text-[14px] mb-1">Responsif &amp; Modern</div>
+                        <div class="text-[13px] text-[#555] leading-[1.7]">Nyaman diakses dari laptop, tablet, maupun
+                            smartphone.</div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ===== FITUR ===== -->
-    <section id="fitur" class="py-32 relative">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="max-w-2xl mx-auto text-center mb-20">
-                <h2 class="text-blue-500 font-bold tracking-[0.2em] text-xs uppercase mb-3">Keunggulan</h2>
-                <h3 class="text-4xl font-extrabold text-white mb-6">Didesain untuk Efisiensi</h3>
-                <p class="text-slate-400">Kami menghilangkan kerumitan administrasi manual agar Anda bisa fokus pada produktivitas laboratorium.</p>
+    <div style="border-top:2.5px solid #0a0a0a"></div>
+
+    <!-- STATS -->
+    <section class="bg-ink2">
+        <div class="reveal max-w-[1100px] mx-auto grid grid-cols-2 lg:grid-cols-4">
+            <div
+                class="stat relative overflow-hidden px-5 py-11 flex flex-col items-center gap-2.5 border-r border-white/10">
+                <div class="w-11 h-11 border border-white/25 flex items-center justify-center text-yellow text-xl"><i
+                        class="ti ti-users"></i></div>
+                <div class="font-syne font-extrabold text-[34px] text-white leading-none">{{ $activeMembers }}</div>
+                <div class="font-mono text-[10px] uppercase text-white/50 text-center">Anggota Aktif</div>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Card 1 -->
-                <div class="glow-card p-8 rounded-[2.5rem] group">
-                    <div class="w-14 h-14 bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </div>
-                    <h4 class="text-xl font-bold text-white mb-3">Akses Instan</h4>
-                    <p class="text-slate-400 text-sm leading-relaxed">Pinjam barang secepat kilat dengan sistem scan barcode yang terintegrasi penuh.</p>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="glow-card p-8 rounded-[2.5rem] group">
-                    <div class="w-14 h-14 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </div>
-                    <h4 class="text-xl font-bold text-white mb-3">Keamanan Tinggi</h4>
-                    <p class="text-slate-400 text-sm leading-relaxed">Data riwayat tidak bisa dimanipulasi, menjamin akuntabilitas setiap pengguna laboratorium.</p>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="glow-card p-8 rounded-[2.5rem] group">
-                    <div class="w-14 h-14 bg-purple-500/10 text-purple-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </div>
-                    <h4 class="text-xl font-bold text-white mb-3">Laporan Detail</h4>
-                    <p class="text-slate-400 text-sm leading-relaxed">Pantau grafik penggunaan aset secara mingguan atau bulanan secara otomatis.</p>
-                </div>
+            <div
+                class="stat relative overflow-hidden px-5 py-11 flex flex-col items-center gap-2.5 lg:border-r border-white/10">
+                <div class="w-11 h-11 border border-white/25 flex items-center justify-center text-yellow text-xl"><i
+                        class="ti ti-clipboard-list"></i></div>
+                <div class="font-syne font-extrabold text-[34px] text-white leading-none">{{ $loanCount }}</div>
+                <div class="font-mono text-[10px] uppercase text-white/50 text-center">Peminjaman</div>
+            </div>
+            <div
+                class="stat relative overflow-hidden px-5 py-11 flex flex-col items-center gap-2.5 border-r border-white/10">
+                <div class="w-11 h-11 border border-white/25 flex items-center justify-center text-yellow text-xl"><i
+                        class="ti ti-check"></i></div>
+                <div class="font-syne font-extrabold text-[34px] text-white leading-none">{{ $availableCount }}</div>
+                <div class="font-mono text-[10px] uppercase text-white/50 text-center">Aset Tersedia</div>
+            </div>
+            <div class="stat relative overflow-hidden px-5 py-11 flex flex-col items-center gap-2.5">
+                <div class="w-11 h-11 border border-white/25 flex items-center justify-center text-yellow text-xl"><i
+                        class="ti ti-laptop"></i></div>
+                <div class="font-syne font-extrabold text-[34px] text-white leading-none">{{ $assetCount }}</div>
+                <div class="font-mono text-[10px] uppercase text-white/50 text-center">Aset Tercatat</div>
             </div>
         </div>
     </section>
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="bg-black/40 border-t border-white/5 py-12">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
-            <div>
-                <div class="flex items-center gap-3 justify-center md:justify-start mb-4">
-                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold italic">S</div>
-                    <span class="text-lg font-bold text-white uppercase tracking-wider">SIPALKOM</span>
+    <!-- FOOTER -->
+    <footer class="bg-ink border-t-[3px] border-yellow">
+        <div class="border-b border-white/[.07]">
+            <div class="max-w-[1100px] mx-auto px-6 py-[18px] flex flex-wrap items-center justify-between gap-4">
+                <span class="font-mono text-[10px] uppercase text-white/25">© 2026 — Sistem Informasi Laboratorium
+                    Komputer</span>
+                <div class="flex items-center gap-[7px] font-mono text-[10px] uppercase text-white/40">
+                    <span class="w-[6px] h-[6px] rounded-full bg-green pulse-anim"></span>Semua sistem berjalan normal
                 </div>
-                <p class="text-xs text-slate-500 max-w-sm">
-                    © 2026 SIPALKOM Management. Dioptimalkan untuk efisiensi tinggi dalam pengelolaan laboratorium digital.
-                </p>
             </div>
-            
-            <div class="flex gap-4">
-                <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-blue-600 transition-all hover:scale-110">
-                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                </a>
-                <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-blue-600 transition-all hover:scale-110">
-                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                </a>
+        </div>
+        <div class="max-w-[1100px] mx-auto px-6 py-8 flex flex-wrap items-center justify-between gap-5">
+            <div class="flex items-center gap-2 bg-yellow border-2 border-white/15 px-3 py-[5px]">
+                <div class="w-2 h-2 rounded-full bg-ink"></div>
+                <span class="font-syne font-extrabold text-[12px] tracking-[.15em] text-ink">SIPALKOM</span>
+            </div>
+            <span class="font-mono text-[11px] text-white/35">Laboratorium Komputer — Hak cipta dilindungi</span>
+            <div class="flex items-center gap-1 flex-wrap">
+                <a href="#"
+                    class="font-syne font-bold text-[11px] uppercase px-3.5 py-[7px] border border-white/12 text-white/50 hover:bg-yellow hover:text-ink transition-all no-underline"><i
+                        class="ti ti-home mr-1"></i>Home</a>
+                <a href="#about"
+                    class="font-syne font-bold text-[11px] uppercase px-3.5 py-[7px] border border-white/12 text-white/50 hover:bg-yellow hover:text-ink transition-all no-underline">About</a>
+                <a href="#fitur"
+                    class="font-syne font-bold text-[11px] uppercase px-3.5 py-[7px] border border-white/12 text-white/50 hover:bg-yellow hover:text-ink transition-all no-underline">Fitur</a>
+                <a href="{{ route('login') }}"
+                    class="font-syne font-bold text-[11px] uppercase px-3.5 py-[7px] border border-white/12 text-white/50 hover:bg-yellow hover:text-ink transition-all no-underline">Login</a>
             </div>
         </div>
     </footer>
 
+    <script>
+        function toggleMenu() { const m = document.getElementById('mob'); m.classList.toggle('hidden'); m.classList.toggle('flex') }
+        document.addEventListener('click', e => { const m = document.getElementById('mob'), b = document.querySelector('button'); if (!m.contains(e.target) && !b.contains(e.target)) { m.classList.add('hidden'); m.classList.remove('flex') } });
+        const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') }), { threshold: .1 });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    </script>
 </body>
+
 </html>

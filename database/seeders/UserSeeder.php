@@ -23,5 +23,17 @@ class UserSeeder extends Seeder
             'password' => Hash::make('123456'),
         ]);
 
+
+
+        User::create([
+            'nama' => 'Agung Ramadhan Pratama Putra',
+            'email' => 'agung@gmail.com',
+            'no_tlp' => '08123456789',
+            'role' => 'user',
+            'password' => Hash::make('123456'),
+        ]);
+
     }
+
+     
 }

@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
+use App\Models\AlatLab;
+use App\Models\Peminjam;
+use App\Models\pengembalian;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\User\AlatLabController;
 use App\Http\Controllers\User\BerandaController;
@@ -14,7 +18,11 @@ use App\Http\Controllers\User\PeminjamController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $activeMembers = User::where('role', 'user')->count();
+    $loanCount = Peminjam::count();
+    $availableCount = AlatLab::where('stok', '>', 0)->count();
+    $assetCount = AlatLab::count();
+    return view('welcome', compact('activeMembers', 'loanCount', 'availableCount', 'assetCount'));
 });
 
 // LOGIN

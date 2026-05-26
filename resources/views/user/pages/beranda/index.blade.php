@@ -22,9 +22,7 @@
                                 <h4 class="mb-1">Halo, <b>{{ auth()->user()->nama }}</b>! 👋</h4>
                                 <p class="mb-0 opacity-8">Selamat datang di <strong>SIPALKOM</strong>. Cari dan pinjam alat laboratorium dengan cepat.</p>
                             </div>
-                            <div class="d-none d-md-block">
-                                <img src="https://cdn-icons-png.flaticon.com/512/6213/6213825.png" alt="welcome" width="80">
-                            </div>
+                         
                         </div>
                     </div>
                 </div>

@@ -1,189 +1,215 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIPALKOM | Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <script src="{{ asset('sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
+
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { height: 100%; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             min-height: 100vh;
-            background: #0a0f1e;
-            color: #f1f5f9;
             font-family: 'DM Sans', sans-serif;
-            display: flex;
-            flex-direction: column;
-        }
-
-        h1, h2, .brand { font-family: 'Syne', sans-serif; letter-spacing: -0.02em; }
-        a { text-decoration: none; color: inherit; }
-
-        /* NAV */
-        nav {
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            padding: 0 1.5rem;
-            height: 60px;
-            display: flex;
-            align-items: center;
-        }
-        .brand { font-size: 1.1rem; font-weight: 800; }
-        .brand span { color: #60a5fa; }
-
-        /* MAIN */
-        main {
-            flex: 1;
+            background: #fafaf7;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem 1.5rem;
-            background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(37,99,235,0.12) 0%, transparent 65%);
+            padding: 20px;
         }
 
-        .card {
+        .wrap {
             width: 100%;
             max-width: 420px;
-            background: #0d1526;
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 16px;
-            padding: 2.5rem;
+            border: 2.5px solid #0a0a0a;
+            box-shadow: 8px 8px 0 #0a0a0a;
+            background: #fff;
+            padding: 35px 30px;
         }
 
-        .card-head { text-align: center; margin-bottom: 2rem; }
-        .card-head h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.35rem; }
-        .card-head p { font-size: 0.85rem; color: #64748b; }
+        .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
 
-        /* FORM */
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.4rem; font-weight: 500; }
+        .logo span {
+            background: #f5c518;
+            padding: 8px 20px;
+            border: 2px solid #000;
+            box-shadow: 3px 3px 0 #000;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
 
-        input {
+        .title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .title h2 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 24px;
+        }
+
+        .title p {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .form-input {
             width: 100%;
-            padding: 0.7rem 1rem;
-            background: #111827;
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 8px;
-            color: #f1f5f9;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.9rem;
+            padding: 11px;
+            border: 2px solid #000;
+            box-shadow: 3px 3px 0 #000;
             outline: none;
-            transition: border-color 0.2s;
         }
 
-        input::placeholder { color: #334155; }
-        input:focus { border-color: rgba(59,130,246,0.5); }
-        input.is-invalid { border-color: rgba(239,68,68,0.5); }
+        .form-input:focus {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 #000;
+        }
 
-        .error-msg { font-size: 0.75rem; color: #f87171; margin-top: 0.35rem; }
+        .is-invalid {
+            border-color: red;
+            box-shadow: 3px 3px 0 red;
+        }
+
+        .error-msg {
+            font-size: 11px;
+            color: red;
+            margin-top: 4px;
+        }
 
         .btn-submit {
             width: 100%;
-            padding: 0.75rem;
-            background: #2563eb;
-            color: #fff;
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 0.9rem;
-            border: none;
-            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            background: #f5c518;
+            border: 2px solid #000;
+            box-shadow: 4px 4px 0 #000;
+            font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 0.5rem;
         }
-        .btn-submit:hover { background: #3b82f6; }
+
+        .btn-submit:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 #000;
+        }
 
         .divider {
-            display: flex; align-items: center; gap: 0.75rem;
-            margin: 1.5rem 0;
-            color: #1e293b; font-size: 0.8rem;
-        }
-        .divider::before, .divider::after {
-            content: ''; flex: 1;
-            height: 1px; background: rgba(255,255,255,0.06);
-        }
-
-        .link-register { text-align: center; font-size: 0.82rem; color: #64748b; }
-        .link-register a { color: #60a5fa; font-weight: 500; }
-        .link-register a:hover { color: #93c5fd; }
-
-        /* FOOTER */
-        footer {
             text-align: center;
-            padding: 1.25rem;
-            font-size: 0.75rem;
-            color: #1e293b;
-            border-top: 1px solid rgba(255,255,255,0.04);
+            margin: 18px 0;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .link-register {
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .link-register a {
+            color: #1640d4;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 10px;
+            color: #aaa;
         }
     </style>
 </head>
+
 <body>
 
-<main>
-    <div class="card">
-        <div class="card-head">
-            <h2>Selamat Datang</h2>
-            <p>Masuk ke sistem SIPALKOM</p>
+    <div class="wrap">
+
+        <div class="logo">
+            <span>SIPALKOM</span>
         </div>
 
+       
         <form action="{{ route('loginProses') }}" method="POST">
             @csrf
 
             <div class="form-group">
-                <label for="email">Email</label>
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="email@institusi.ac.id"
-                    value="{{ old('email') }}"
-                    class="{{ $errors->has('email') ? 'is-invalid' : '' }}"
-                >
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-input {{ $errors->has('email') ? 'is-invalid' : '' }}"
+                    value="{{ old('email') }}" placeholder="email@contoh.com">
+
                 @error('email')
                     <div class="error-msg">{{ $message }}</div>
                 @enderror
             </div>
 
             <div class="form-group">
-                <label for="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="••••••••"
-                    class="{{ $errors->has('password') ? 'is-invalid' : '' }}"
-                >
+                <label class="form-label">Password</label>
+                <input type="password" name="password"
+                    class="form-input {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="••••••">
+
                 @error('password')
                     <div class="error-msg">{{ $message }}</div>
                 @enderror
             </div>
 
-            <button type="submit" class="btn-submit">Masuk →</button>
+            <button class="btn-submit">
+                <i class="ti ti-login"></i> Masuk
+            </button>
+
         </form>
 
         <div class="divider">atau</div>
 
         <div class="link-register">
-            Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a>
+            Belum punya akun? <a href="{{ route('register') }}">Daftar</a>
         </div>
+
+        <div class="footer">
+            © 2026 SIPALKOM
+        </div>
+
     </div>
-</main>
 
-<footer>© 2026 SIPALKOM — Sistem Peminjaman Alat Laboratorium Komputer</footer>
+    @if(session('success'))
+        <script>
+            Swal.fire({ title: 'Sukses', text: "{{ session('success') }}", icon: 'success' });
+        </script>
+    @endif
 
-@if(session('success'))
-<script>
-    Swal.fire({ title: 'Sukses', text: "{{ session('success') }}", icon: 'success' });
-</script>
-@endif
-
-@if(session('error'))
-<script>
-    Swal.fire({ title: 'Gagal', text: "{{ session('error') }}", icon: 'error' });
-</script>
-@endif
+    @if(session('error'))
+        <script>
+            Swal.fire({ title: 'Gagal', text: "{{ session('error') }}", icon: 'error' });
+        </script>
+    @endif
 
 </body>
+
 </html>
