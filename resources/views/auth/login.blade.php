@@ -152,8 +152,10 @@
 
     <div class="wrap">
 
-        <div class="logo">
-            <span>SIPALKOM</span>
+        <div class="user-select-none logo">
+            <span>LOGIN CUY
+                <small style="font-size: 8px; display: block; margin-top: 2px; text-transform: uppercase; text-align: center;">SIPALKOM</small>
+            </span>
         </div>
 
        
@@ -192,8 +194,8 @@
             Belum punya akun? <a href="{{ route('register') }}">Daftar</a>
         </div>
 
-        <div class="footer">
-            © 2026 SIPALKOM
+        <div class="link-register">
+            Kembali ke <a href="{{ route('welcome') }}">Beranda</a>
         </div>
 
     </div>

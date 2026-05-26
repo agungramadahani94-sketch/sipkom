@@ -23,7 +23,7 @@ Route::get('/', function () {
     $availableCount = AlatLab::where('stok', '>', 0)->count();
     $assetCount = AlatLab::count();
     return view('welcome', compact('activeMembers', 'loanCount', 'availableCount', 'assetCount'));
-});
+})->name('welcome');
 
 // LOGIN
 Route::get('login', [AuthController::class, 'login'])->name('login');

@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIPALKOM | Register</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <script src="{{ asset('sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
 
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             min-height: 100vh;
@@ -21,38 +29,48 @@
             padding: 20px;
         }
 
-        .card {
+        .wrap {
             width: 100%;
             max-width: 420px;
-            background: #fff;
-            border: 2px solid #000;
+            border: 2.5px solid #000;
             box-shadow: 8px 8px 0 #000;
+            background: #fff;
             padding: 35px 30px;
         }
 
-        .title {
-            text-align: center;
-            margin-bottom: 25px;
+        /* LOGO KUNING (SAMA PERSIS LOGIN) */
+        .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
         }
 
-        .title h2 {
+        .logo span {
+            background: #f5c518;
+            padding: 10px 22px;
+            border: 2px solid #000;
+            box-shadow: 4px 4px 0 #000;
             font-family: 'Syne', sans-serif;
             font-weight: 800;
-            font-size: 24px;
+            letter-spacing: 2px;
+            text-align: center;
         }
 
-        .title p {
-            font-size: 13px;
-            color: #666;
+        .logo small {
+            display: block;
+            font-size: 10px;
+            margin-top: 2px;
         }
 
-        .form-group { margin-bottom: 14px; }
+        .form-group {
+            margin-bottom: 15px;
+        }
 
         label {
             font-size: 11px;
             font-weight: 700;
             letter-spacing: 1px;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             display: block;
         }
 
@@ -65,7 +83,7 @@
         }
 
         input:focus {
-            transform: translate(-1px,-1px);
+            transform: translate(-1px, -1px);
             box-shadow: 4px 4px 0 #000;
         }
 
@@ -105,7 +123,7 @@
         }
 
         .btn-submit:hover {
-            transform: translate(2px,2px);
+            transform: translate(2px, 2px);
             box-shadow: 2px 2px 0 #000;
         }
 
@@ -137,101 +155,91 @@
 
 <body>
 
-<div class="card">
+    <div class="wrap">
 
-    <div class="title">
-        <h2>Register SIPALKOM</h2>
-        <p>Buat akun baru</p>
-    </div>
-
-    <form action="{{ route('registerProses') }}" method="POST">
-        @csrf
-
-        <div class="form-group">
-            <label>Nama Lengkap</label>
-            <input type="text" name="nama"
-                value="{{ old('nama') }}"
-                placeholder="Nama lengkap"
-                class="{{ $errors->has('nama') ? 'is-invalid' : '' }}">
-
-            @error('nama')
-                <div class="error-msg">{{ $message }}</div>
-            @enderror
+        <!-- LOGO -->
+        <div class="user-select-none logo">
+            <span>
+                REGISTER CUY
+                <small>SIPALKOM</small>
+            </span>
         </div>
 
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" name="email"
-                value="{{ old('email') }}"
-                placeholder="email@contoh.com"
-                class="{{ $errors->has('email') ? 'is-invalid' : '' }}">
+        <form action="{{ route('registerProses') }}" method="POST">
+            @csrf
 
-            @error('email')
-                <div class="error-msg">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="form-group">
-            <label>No HP</label>
-            <input type="text" name="no_tlp"
-                value="{{ old('no_tlp') }}"
-                placeholder="08xxxxxxxxxx"
-                class="{{ $errors->has('no_tlp') ? 'is-invalid' : '' }}">
-
-            @error('no_tlp')
-                <div class="error-msg">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="form-group">
-            <label>Password</label>
-            <div class="password-wrap">
-                <input type="password" id="password" name="password"
-                    placeholder="••••••"
-                    class="{{ $errors->has('password') ? 'is-invalid' : '' }}">
-
-                <span class="toggle-pass" onclick="togglePassword()">👁️</span>
+            <div class="form-group">
+                <label>Nama Lengkap</label>
+                <input type="text" name="nama" value="{{ old('nama') }}" placeholder="Nama lengkap"
+                    class="{{ $errors->has('nama') ? 'is-invalid' : '' }}">
+                @error('nama')
+                    <div class="error-msg">{{ $message }}</div>
+                @enderror
             </div>
 
-            @error('password')
-                <div class="error-msg">{{ $message }}</div>
-            @enderror
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" value="{{ old('email') }}" placeholder="email@contoh.com"
+                    class="{{ $errors->has('email') ? 'is-invalid' : '' }}">
+                @error('email')
+                    <div class="error-msg">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label>No HP</label>
+                <input type="text" name="no_tlp" value="{{ old('no_tlp') }}" placeholder="08xxxxxxxxxx"
+                    class="{{ $errors->has('no_tlp') ? 'is-invalid' : '' }}">
+                @error('no_tlp')
+                    <div class="error-msg">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <div class="password-wrap">
+                    <input type="password" id="password" name="password" placeholder="••••••"
+                        class="{{ $errors->has('password') ? 'is-invalid' : '' }}">
+                    <span class="toggle-pass" onclick="togglePassword()">👁️</span>
+                </div>
+                @error('password')
+                    <div class="error-msg">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <button class="btn-submit">Daftar</button>
+
+        </form>
+
+        <div class="divider">atau</div>
+
+        <div class="link-login">
+            Sudah punya akun? <a href="{{ route('login') }}">Masuk</a>
         </div>
 
-        <button class="btn-submit">Daftar</button>
+      
 
-    </form>
-
-    <div class="divider">atau</div>
-
-    <div class="link-login">
-        Sudah punya akun? <a href="{{ route('login') }}">Masuk</a>
     </div>
 
-    <div class="footer">
-        © 2026 SIPALKOM
-    </div>
+    <script>
+        function togglePassword() {
+            let input = document.getElementById("password");
+            input.type = input.type === "password" ? "text" : "password";
+        }
+    </script>
 
-</div>
+    @if(session('success'))
+        <script>
+            Swal.fire({ title: 'Sukses', text: "{{ session('success') }}", icon: 'success' });
+        </script>
+    @endif
 
-<script>
-function togglePassword() {
-    let input = document.getElementById("password");
-    input.type = input.type === "password" ? "text" : "password";
-}
-</script>
-
-@if(session('success'))
-<script>
-Swal.fire({ title: 'Sukses', text: "{{ session('success') }}", icon: 'success' });
-</script>
-@endif
-
-@if(session('error'))
-<script>
-Swal.fire({ title: 'Gagal', text: "{{ session('error') }}", icon: 'error' });
-</script>
-@endif
+    @if(session('error'))
+        <script>
+            Swal.fire({ title: 'Gagal', text: "{{ session('error') }}", icon: 'error' });
+        </script>
+    @endif
 
 </body>
+
 </html>
