@@ -22,8 +22,8 @@ Route::get('/', function () {
     $loanCount = Peminjam::count();
     $availableCount = AlatLab::where('stok', '>', 0)->count();
     $assetCount = AlatLab::count();
-    return view('welcome', compact('activeMembers', 'loanCount', 'availableCount', 'assetCount'));
-})->name('welcome');
+    return view('landingpage.welcome', compact('activeMembers', 'loanCount', 'availableCount', 'assetCount'));
+})->name('landingpage.welcome');
 
 // LOGIN
 Route::get('login', [AuthController::class, 'login'])->name('login');

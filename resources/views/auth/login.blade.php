@@ -154,11 +154,12 @@
 
         <div class="user-select-none logo">
             <span>LOGIN CUY
-                <small style="font-size: 8px; display: block; margin-top: 2px; text-transform: uppercase; text-align: center;">SIPALKOM</small>
+                <small
+                    style="font-size: 8px; display: block; margin-top: 2px; text-transform: uppercase; text-align: center;">SIPALKOM</small>
             </span>
         </div>
 
-       
+
         <form action="{{ route('loginProses') }}" method="POST">
             @csrf
 
@@ -189,28 +190,31 @@
         </form>
 
         <div class="divider">atau</div>
+        <hr>
 
         <div class="link-register">
-            Belum punya akun? <a href="{{ route('register') }}">Daftar</a>
+            <p>Belum punya akun?
+                <a href="{{ route('register') }}">Daftar</a>
+            </p>
         </div>
 
         <div class="link-register">
-            Kembali ke <a href="{{ route('welcome') }}">Beranda</a>
+            <p>Kembali ke ->
+                <a href="{{ route('landingpage.welcome') }}">Beranda</a>
+            </p>
         </div>
 
-    </div>
+        @if(session('success'))
+            <script>
+                Swal.fire({ title: 'Sukses', text: "{{ session('success') }}", icon: 'success' });
+            </script>
+        @endif
 
-    @if(session('success'))
-        <script>
-            Swal.fire({ title: 'Sukses', text: "{{ session('success') }}", icon: 'success' });
-        </script>
-    @endif
-
-    @if(session('error'))
-        <script>
-            Swal.fire({ title: 'Gagal', text: "{{ session('error') }}", icon: 'error' });
-        </script>
-    @endif
+        @if(session('error'))
+            <script>
+                Swal.fire({ title: 'Gagal', text: "{{ session('error') }}", icon: 'error' });
+            </script>
+        @endif
 
 </body>
 
