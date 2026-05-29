@@ -6,10 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIPALKOM | Login</title>
 
+    <!-- Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap"
         rel="stylesheet">
+
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+    <!-- SweetAlert -->
     <script src="{{ asset('sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
 
     <style>
@@ -52,6 +57,14 @@
             font-family: 'Syne', sans-serif;
             font-weight: 800;
             letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .logo small {
+            font-size: 8px;
+            display: block;
+            margin-top: 2px;
+            text-transform: uppercase;
         }
 
         .title {
@@ -129,14 +142,24 @@
             color: #aaa;
         }
 
+        hr {
+            margin-bottom: 15px;
+        }
+
         .link-register {
             text-align: center;
             font-size: 13px;
+            margin-top: 8px;
         }
 
         .link-register a {
             color: #1640d4;
             font-weight: bold;
+            text-decoration: none;
+        }
+
+        .link-register a:hover {
+            text-decoration: underline;
         }
 
         .footer {
@@ -152,14 +175,15 @@
 
     <div class="wrap">
 
-        <div class="user-select-none logo">
-            <span>LOGIN CUY
-                <small
-                    style="font-size: 8px; display: block; margin-top: 2px; text-transform: uppercase; text-align: center;">SIPALKOM</small>
+        <!-- Logo -->
+        <div class="logo user-select-none">
+            <span>
+                LOGIN CUY
+                <small>SIPALKOM</small>
             </span>
         </div>
 
-
+        <!-- Form -->
         <form action="{{ route('loginProses') }}" method="POST">
             @csrf
 
@@ -167,7 +191,6 @@
                 <label class="form-label">Email</label>
                 <input type="email" name="email" class="form-input {{ $errors->has('email') ? 'is-invalid' : '' }}"
                     value="{{ old('email') }}" placeholder="email@contoh.com">
-
                 @error('email')
                     <div class="error-msg">{{ $message }}</div>
                 @enderror
@@ -177,44 +200,57 @@
                 <label class="form-label">Password</label>
                 <input type="password" name="password"
                     class="form-input {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="••••••">
-
                 @error('password')
                     <div class="error-msg">{{ $message }}</div>
                 @enderror
             </div>
 
-            <button class="btn-submit">
+            <button type="submit" class="btn-submit">
                 <i class="ti ti-login"></i> Masuk
             </button>
-
         </form>
 
+        <!-- Divider -->
         <div class="divider">atau</div>
         <hr>
 
+        <!-- Links -->
         <div class="link-register">
-            <p>Belum punya akun?
+            <p>
+                Belum punya akun?
                 <a href="{{ route('register') }}">Daftar</a>
             </p>
         </div>
 
         <div class="link-register">
-            <p>Kembali ke ->
+            <p>
+                Kembali ke →
                 <a href="{{ route('landingpage.welcome') }}">Beranda</a>
             </p>
         </div>
 
-        @if(session('success'))
-            <script>
-                Swal.fire({ title: 'Sukses', text: "{{ session('success') }}", icon: 'success' });
-            </script>
-        @endif
+    </div>
 
-        @if(session('error'))
-            <script>
-                Swal.fire({ title: 'Gagal', text: "{{ session('error') }}", icon: 'error' });
-            </script>
-        @endif
+    <!-- Alerts -->
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                title: 'Sukses',
+                text: "{{ session('success') }}",
+                icon: 'success'
+            });
+        </script>
+    @endif
+
+    @if(session('error'))
+        <script>
+            Swal.fire({
+                title: 'Gagal',
+                text: "{{ session('error') }}",
+                icon: 'error'
+            });
+        </script>
+    @endif
 
 </body>
 

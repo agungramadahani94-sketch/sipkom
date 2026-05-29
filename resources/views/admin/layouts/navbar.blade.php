@@ -32,6 +32,7 @@
       </a>
 
       <div class="dropdown-menu dropdown-menu-right">
+     
 
 
         <a href="{{ route('logout') }}" class="dropdown-item has-icon text-danger"
@@ -41,7 +42,7 @@
         </a>  
         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
           @csrf
-        </form> 
+        </form>
         
 
        

@@ -10,19 +10,12 @@ return new class extends Migration
     {
         Schema::create('pengembalians', function (Blueprint $table) {
             $table->id();
-
             $table->unsignedBigInteger('peminjam_id');
-
             $table->date('tanggal_kembali');
-
             $table->enum('status', ['dipinjam', 'dikembalikan'])->default('dipinjam');
-
             $table->timestamps();
 
-            $table->foreign('peminjam_id')
-                ->references('id_peminjam')
-                ->on('peminjams')
-                ->onDelete('cascade');
+            $table->foreign('peminjam_id')->references('id_peminjam')->on('peminjams')->onDelete('cascade');
         });
     }
 

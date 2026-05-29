@@ -116,3 +116,4 @@ Route::prefix('user')->middleware(['auth', 'role:user'])->group(function () {
     Route::post('/kembali/{id}', [PeminjamController::class, 'kembali'])
         ->name('user.kembali');
 });
+
