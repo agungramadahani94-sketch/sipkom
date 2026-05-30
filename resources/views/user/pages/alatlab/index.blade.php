@@ -5,63 +5,93 @@
     <section class="section">
 
         <div class="section-header">
-            <h1>Daftar Alat</h1>
+            <h1>Riwayat Peminjaman</h1>
         </div>
 
         <div class="section-body">
-            <div class="row">
+            <div class="card shadow-sm">
 
-                @forelse($alat as $item)
-                <div class="col-md-4 mb-4">
-                    <div class="card shadow-sm h-100">
+                <div class="card-header">
+                    <h4>Daftar Peminjaman Saya</h4>
+                </div>
 
-                        {{-- ✅ GAMBAR --}}
-                        <div style="height:200px; overflow:hidden;">
-                            @if($item->gambar && file_exists(public_path('storage/'.$item->gambar)))
-                                <img src="{{ asset('storage/'.$item->gambar) }}"
-                                     style="width:100%; height:100%; object-fit:cover;">
-                            @else
-                                <img src="{{ asset('images/no-image.png') }}"
-                                     style="width:100%; height:100%; object-fit:cover;">
-                            @endif
-                        </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr class="bg-primary">
+                                    <th class="text-white">No</th>
+                                    <th class="text-white">Alat</th>
+                                    <th class="text-white">Tanggal Pinjam</th>
+                                    <th class="text-white">Tanggal Kembali</th>
+                                    <th class="text-white">Status</th>
+                                    <th class="text-white">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($data as $i => $d)
+                                <tr>
+                                    <td>{{ $i + 1 }}</td>
+                                    <td>{{ $d->alat->nama_alat ?? '-' }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($d->tgl_pinjam)->format('d M Y') }}</td>
 
-                        {{-- BODY --}}
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="text-primary">{{ $item->nama_alat }}</h5>
+                                    {{-- TANGGAL KEMBALI --}}
+                                    <td>
+                                        @if($d->tgl_pengembalian)
+                                            @php
+                                                $tglKembali = \Carbon\Carbon::parse($d->tgl_pengembalian)->startOfDay();
+                                                $today      = \Carbon\Carbon::today();
+                                                $isTelat    = $d->status === 'dipinjam' && $tglKembali->lt($today);
+                                            @endphp
 
-                            <p class="mb-1">Kategori: {{ $item->kategori }}</p>
+                                            @if($isTelat)
+                                                <span class="text-danger font-weight-bold">
+                                                    {{ $tglKembali->format('d M Y') }}
+                                                    <small>(Telat)</small>
+                                                </span>
+                                            @else
+                                                {{ $tglKembali->format('d M Y') }}
+                                            @endif
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
 
-                            <p class="mb-2">
-                                Stok:
-                                <b class="{{ $item->stok == 0 ? 'text-danger' : 'text-success' }}">
-                                    {{ $item->stok }}
-                                </b>
-                            </p>
+                                    {{-- STATUS --}}
+                                    <td>
+                                        @if($d->status == 'dipinjam')
+                                            <span class="badge badge-warning">Dipinjam</span>
+                                        @else
+                                            <span class="badge badge-success">Dikembalikan</span>
+                                        @endif
+                                    </td>
 
-                            {{-- BUTTON --}}
-                            <div class="mt-auto">
-                                @if($item->stok > 0)
-                                    <a href="{{ route('user.pinjam', $item->id_alat) }}"
-                                       class="btn btn-primary w-100">
-                                        Pinjam
-                                    </a>
-                                @else
-                                    <button class="btn btn-secondary w-100" disabled>
-                                        Stok Habis
-                                    </button>
-                                @endif
-                            </div>
-
-                        </div>
-
+                                    {{-- AKSI --}}
+                                    <td>
+                                        @if($d->status == 'dipinjam')
+                                            <form action="{{ route('user.kembali', $d->id_peminjam) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success btn-sm"
+                                                    onclick="return confirm('Kembalikan alat ini?')">
+                                                    <i class="fas fa-undo"></i> Kembalikan
+                                                </button>
+                                            </form>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">
+                                        Belum ada riwayat peminjaman.
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                @empty
-                <div class="col-12 text-center">
-                    <p class="text-muted">Belum ada alat.</p>
-                </div>
-                @endforelse
 
             </div>
         </div>

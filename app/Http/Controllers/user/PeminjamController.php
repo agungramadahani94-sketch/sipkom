@@ -31,7 +31,11 @@ class PeminjamController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'alat_id' => 'required|exists:alatlabs,id_alat',
+            'alat_id'         => 'required|exists:alatlabs,id_alat',
+            'tanggal_pinjam'  => 'required|date',
+            'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
+        ], [
+            'tanggal_kembali.after_or_equal' => 'Tanggal kembali tidak boleh sebelum tanggal pinjam.',
         ]);
 
         $alat = AlatLab::findOrFail($request->alat_id);
@@ -51,15 +55,16 @@ class PeminjamController extends Controller
         }
 
         Peminjam::create([
-            'id_user'    => auth()->id(),
-            'id_alat'    => $alat->id_alat,
-            'tgl_pinjam' => now()->toDateString(),
-            'status'     => 'dipinjam',
+            'id_user'          => auth()->id(),
+            'id_alat'          => $alat->id_alat,
+            'tgl_pinjam'       => $request->tanggal_pinjam,
+            'tgl_pengembalian' => $request->tanggal_kembali,
+            'status'           => 'dipinjam',
         ]);
 
         $alat->decrement('stok');
 
-        return redirect()->route('user.alat')->with('success', 'Berhasil meminjam alat');
+        return redirect()->route('user.alat')->with('success', 'Berhasil meminjam alat!');
     }
 
     // ✅ KEMBALI
@@ -74,12 +79,12 @@ class PeminjamController extends Controller
         }
 
         $peminjam->update([
-            'status' => 'kembali',
+            'status'           => 'kembali',
             'tgl_pengembalian' => now()->toDateString(),
         ]);
 
         $peminjam->alat->increment('stok');
 
-        return back()->with('success', 'Berhasil mengembalikan alat');
+        return back()->with('success', 'Berhasil mengembalikan alat!');
     }
 }
