@@ -5,97 +5,87 @@
     <section class="section">
 
         <div class="section-header">
-            <h1>Riwayat Peminjaman</h1>
+            <h1>Daftar Alat</h1>
         </div>
 
         <div class="section-body">
-            <div class="card shadow-sm">
+            <div class="row">
 
-                <div class="card-header">
-                    <h4>Daftar Peminjaman Saya</h4>
-                </div>
+                @forelse($alat as $item)
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm h-100 border-0">
 
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr class="bg-primary">
-                                    <th class="text-white">No</th>
-                                    <th class="text-white">Alat</th>
-                                    <th class="text-white">Tanggal Pinjam</th>
-                                    <th class="text-white">Tanggal Kembali</th>
-                                    <th class="text-white">Status</th>
-                                    <th class="text-white">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($data as $i => $d)
-                                <tr>
-                                    <td>{{ $i + 1 }}</td>
-                                    <td>{{ $d->alat->nama_alat ?? '-' }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($d->tgl_pinjam)->format('d M Y') }}</td>
+                        <div style="height:240px; overflow:hidden; border-top-left-radius:10px; border-top-right-radius:10px;">
+                            @if($item->gambar && file_exists(public_path('storage/'.$item->gambar)))
+                                <img src="{{ asset('storage/'.$item->gambar) }}"
+                                     style="width:100%; height:240px; object-fit:cover;">
+                            @else
+                                <img src="{{ asset('images/no-image.png') }}"
+                                     style="width:100%; height:240px; object-fit:cover;">
+                            @endif
+                        </div>
 
-                                    {{-- TANGGAL KEMBALI --}}
-                                    <td>
-                                        @if($d->tgl_pengembalian)
-                                            @php
-                                                $tglKembali = \Carbon\Carbon::parse($d->tgl_pengembalian)->startOfDay();
-                                                $today      = \Carbon\Carbon::today();
-                                                $isTelat    = $d->status === 'dipinjam' && $tglKembali->lt($today);
-                                            @endphp
+                        <div class="card-body d-flex flex-column">
 
-                                            @if($isTelat)
-                                                <span class="text-danger font-weight-bold">
-                                                    {{ $tglKembali->format('d M Y') }}
-                                                    <small>(Telat)</small>
-                                                </span>
-                                            @else
-                                                {{ $tglKembali->format('d M Y') }}
-                                            @endif
-                                        @else
-                                            <span class="text-muted">-</span>
-                                        @endif
-                                    </td>
+                            <h5 class="text-primary font-weight-bold mb-1">
+                                {{ $item->nama_alat }}
+                            </h5>
 
-                                    {{-- STATUS --}}
-                                    <td>
-                                        @if($d->status == 'dipinjam')
-                                            <span class="badge badge-warning">Dipinjam</span>
-                                        @else
-                                            <span class="badge badge-success">Dikembalikan</span>
-                                        @endif
-                                    </td>
+                            <p class="mb-2 text-muted small">
+                                {{ ucfirst($item->kategori) }}
+                            </p>
 
-                                    {{-- AKSI --}}
-                                    <td>
-                                        @if($d->status == 'dipinjam')
-                                            <form action="{{ route('user.kembali', $d->id_peminjam) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-success btn-sm"
-                                                    onclick="return confirm('Kembalikan alat ini?')">
-                                                    <i class="fas fa-undo"></i> Kembalikan
-                                                </button>
-                                            </form>
-                                        @else
-                                            <span class="text-muted">-</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="6" class="text-center text-muted">
-                                        Belum ada riwayat peminjaman.
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                            <div class="mb-3">
+                                <small class="font-weight-bold text-muted d-block mb-1">
+                                    Stok Tersedia:
+                                </small>
+                                <span class="badge badge-info px-2 py-1">
+                                    {{ $item->stok }} unit
+                                </span>
+                                <span class="badge badge-secondary px-2 py-1 ml-2">
+                                    Kondisi: {{ ucfirst($item->kondisi) }}
+                                </span>
+                            </div>
+
+                            <div class="mt-auto">
+                                @if($item->stok > 0)
+                                    <a href="{{ route('user.pinjam', $item->id_alat) }}"
+                                       class="btn btn-primary w-100">
+                                        Pinjam ({{ $item->stok }} tersedia)
+                                    </a>
+                                @else
+                                    <button class="btn btn-secondary w-100" disabled>
+                                        Tidak Ada yang Tersedia
+                                    </button>
+                                @endif
+                            </div>
+
+                        </div>
                     </div>
                 </div>
+
+                @empty
+                <div class="col-12 text-center">
+                    <p class="text-muted">Belum ada alat.</p>
+                </div>
+                @endforelse
 
             </div>
         </div>
 
     </section>
 </div>
+
+<style>
+.card img {
+    transition: 0.3s ease;
+}
+.card:hover img {
+    transform: scale(1.05);
+}
+.card {
+    border-radius: 10px;
+}
+</style>
+
 @endsection

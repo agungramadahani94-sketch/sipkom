@@ -34,27 +34,30 @@
                                     <td>{{ $i + 1 }}</td>
                                     <td>{{ $d->alat->nama_alat ?? '-' }}</td>
                                     <td>{{ \Carbon\Carbon::parse($d->tgl_pinjam)->format('d M Y') }}</td>
+
+                                    {{-- TANGGAL KEMBALI --}}
                                     <td>
                                         @if($d->tgl_pengembalian)
-                                            @if(\Carbon\Carbon::parse($d->tgl_pengembalian)->lt(now()))
+                                            @php
+                                                $tglKembali = \Carbon\Carbon::parse($d->tgl_pengembalian)->startOfDay();
+                                                $today      = \Carbon\Carbon::today();
+                                                $isTelat    = $d->status === 'dipinjam' && $tglKembali->lt($today);
+                                            @endphp
+
+                                            @if($isTelat)
                                                 <span class="text-danger font-weight-bold">
-                                                    {{ \Carbon\Carbon::parse($d->tgl_pengembalian)->format('d M Y') }}
+                                                    {{ $tglKembali->format('d M Y') }}
                                                     <small>(Telat)</small>
                                                 </span>
                                             @else
-                                                {{ \Carbon\Carbon::parse($d->tgl_pengembalian)->format('d M Y') }}
+                                                {{ $tglKembali->format('d M Y') }}
                                             @endif
                                         @else
-                                            @php
-                                                $due = \Carbon\Carbon::parse($d->tgl_pinjam)->addDays(7);
-                                            @endphp
-                                            @if($due->lt(now()))
-                                                <span class="text-danger font-weight-bold">{{ $due->format('d M Y') }} <small>(Telat)</small></span>
-                                            @else
-                                                {{ $due->format('d M Y') }}
-                                            @endif
+                                            <span class="text-muted">-</span>
                                         @endif
                                     </td>
+
+                                    {{-- STATUS --}}
                                     <td>
                                         @if($d->status == 'dipinjam')
                                             <span class="badge badge-warning">Dipinjam</span>
@@ -62,15 +65,17 @@
                                             <span class="badge badge-success">Dikembalikan</span>
                                         @endif
                                     </td>
+
+                                    {{-- AKSI --}}
                                     <td>
                                         @if($d->status == 'dipinjam')
-                                        <form action="{{ route('user.kembali', $d->id_peminjam) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="btn btn-success btn-sm"
-                                                onclick="return confirm('Kembalikan alat ini?')">
-                                                <i class="fas fa-undo"></i> Kembalikan
-                                            </button>
-                                        </form>
+                                            <form action="{{ route('user.kembali', $d->id_peminjam) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success btn-sm"
+                                                    onclick="return confirm('Kembalikan alat ini?')">
+                                                    <i class="fas fa-undo"></i> Kembalikan
+                                                </button>
+                                            </form>
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif

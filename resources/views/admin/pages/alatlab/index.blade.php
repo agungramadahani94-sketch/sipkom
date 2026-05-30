@@ -41,7 +41,9 @@
                                             <td>{{ $alat->firstItem() + $no }}</td>
                                             <td>
                                                 @if($a->gambar)
-                                                    <img src="{{ asset('storage/' . $a->gambar) }}" alt="{{ $a->nama_alat }}" width="100">
+                                                    <img src="{{ asset('storage/' . $a->gambar) }}"
+                                                         alt="{{ $a->nama_alat }}"
+                                                         style="width:100px; height:80px; object-fit:cover; object-position:center; display:block;">
                                                 @else
                                                     <p class="text-muted">Tidak ada gambar</p>
                                                 @endif
