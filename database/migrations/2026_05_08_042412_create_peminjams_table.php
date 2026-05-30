@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('peminjams', function (Blueprint $table) {
@@ -17,7 +14,8 @@ return new class extends Migration
             $table->unsignedBigInteger('id_alat');
             $table->date('tgl_pinjam');
             $table->date('tgl_pengembalian')->nullable();
-            $table->enum('status', ['dipinjam', 'kembali'])->default('dipinjam');
+            $table->enum('status', ['menunggu', 'dipinjam', 'ditolak', 'kembali'])->default('menunggu');
+            $table->text('catatan_admin')->nullable(); // alasan tolak / catatan approve
             $table->timestamps();
 
             $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
@@ -25,9 +23,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('peminjams');
