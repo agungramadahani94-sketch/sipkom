@@ -4,8 +4,8 @@
 <div class="main-content">
 <section class="section">
 
-    <div class="section-header justify-content-center">
-        <h1>Permohonan Peminjaman</h1>
+    <div class="section-header">
+        <h1>Halaman Permohonan Peminjaman</h1>
     </div>
 
     <div class="section-body">

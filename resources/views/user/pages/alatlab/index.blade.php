@@ -5,10 +5,29 @@
     <section class="section">
 
         <div class="section-header">
-            <h1>Daftar Alat</h1>
+            <h1>Halaman Daftar Alat</h1>
         </div>
 
         <div class="section-body">
+            {{-- Search Bar --}}
+            <div class="row mb-4">
+                <div class="col-md-5">
+                    <form method="GET" action="{{ route('user.alat') }}">
+                        <div class="input-group">
+                            <input type="text"
+                                name="search"
+                                class="form-control"
+                                placeholder="Cari nama alat atau kategori..."
+                                value="{{ $search ?? '' }}">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search"></i> Cari
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <div class="row">
 
                 @forelse($alat as $item)

@@ -9,10 +9,18 @@ use Illuminate\Support\Facades\Storage;
 
 class AlatLabController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $alat = AlatLab::latest()->paginate(10);
-        return view('admin.pages.alatlab.index', compact('alat'));
+        $search = $request->search;
+
+        $alat = AlatLab::when($search, function ($query, $search) {
+            return $query->where('nama_alat', 'like', '%' . $search . '%')
+            ->orWhere('kategori', 'like', '%' . $search . '%');
+        })
+        ->latest()
+        ->paginate(10);
+
+        return view('admin.pages.alatlab.index', compact('alat', 'search'));
     }
 
     public function create()
@@ -33,6 +41,7 @@ class AlatLabController extends Controller
         // upload gambar
         $gambarPath = $request->file('gambar')->store('alat', 'public');
 
+        //Saat admin mengisi form tambah alat lalu menekan tombol simpan, data dikirim ke controller dan disimpan ke database
         AlatLab::create([
             'nama_alat' => $request->nama_alat,
             'kategori' => $request->kategori,
@@ -78,10 +87,10 @@ class AlatLabController extends Controller
             }
 
             // upload baru
-            $data['gambar'] = $request->file('gambar')->store('alat', 'public');
+            $data['gambar'] = $request->file('gambar')->store('alat', 'public'); //Gambar diupload oleh admin dan disimpan ke folder storage/app/public/alat
         }
 
-        $alat->update($data);
+        $alat->update($data); //Admin dapat mengubah informasi alat seperti nama, kategori, kondisi, atau stok
 
         return redirect()->route('alatlab.index')
             ->with('success', 'Data berhasil diupdate');
@@ -96,7 +105,7 @@ class AlatLabController extends Controller
             Storage::disk('public')->delete($alat->gambar);
         }
 
-        $alat->delete();
+        $alat->delete(); //Jika alat sudah tidak digunakan, admin dapat menghapus data dari database
 
         return redirect()->route('alatlab.index')
             ->with('success', 'Data berhasil dihapus');

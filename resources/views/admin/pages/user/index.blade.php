@@ -5,7 +5,7 @@
     <section class="section">
         
         {{-- HEADER --}}
-        <div class="section-header text-center">
+        <div class="section-header">
             <h1>Halaman Data User</h1>
         </div>
 
