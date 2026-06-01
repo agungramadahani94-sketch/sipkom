@@ -37,7 +37,6 @@
                                 <th class="text-white">Alat</th>
                                 <th class="text-white">Tanggal Pinjam</th>
                                 <th class="text-white">Tanggal Dikembalikan</th>
-                                <th class="text-white">Durasi</th>
                                 <th class="text-white">Status</th>
                             </tr>
                         </thead>
@@ -50,17 +49,6 @@
                                 <td>{{ $p->alat->nama_alat ?? '-' }}</td>
                                 <td>{{ $p->tgl_pinjam }}</td>
                                 <td>{{ $p->tgl_pengembalian ?? '-' }}</td>
-                                <td>
-                                    @if($p->tgl_pinjam && $p->tgl_pengembalian)
-                                        @php
-                                            $durasi = \Carbon\Carbon::parse($p->tgl_pinjam)
-                                                        ->diffInDays(\Carbon\Carbon::parse($p->tgl_pengembalian));
-                                        @endphp
-                                        {{ $durasi }} hari
-                                    @else
-                                        -
-                                    @endif
-                                </td>
                                 <td class="text-center">
                                     <span class="badge badge-success">Dikembalikan</span>
                                 </td>

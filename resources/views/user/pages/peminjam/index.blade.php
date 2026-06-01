@@ -18,6 +18,7 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
+
                         <thead>
                             <tr class="bg-primary">
                                 <th class="text-white">No</th>
@@ -29,6 +30,7 @@
                                 <th class="text-white">Aksi</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             @forelse($data as $i => $d)
                             <tr>
@@ -36,91 +38,57 @@
                                 <td>{{ $d->alat->nama_alat ?? '-' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($d->tgl_pinjam)->format('d M Y') }}</td>
 
-                                {{-- TANGGAL KEMBALI --}}
                                 <td>
                                     @if($d->tgl_pengembalian)
-                                        @php
-                                            $tglKembali = \Carbon\Carbon::parse($d->tgl_pengembalian)->startOfDay();
-                                            $isTelat = $d->status === 'dipinjam' && $tglKembali->lt(\Carbon\Carbon::today());
-                                        @endphp
-                                        @if($isTelat)
-                                            <span class="text-danger font-weight-bold">
-                                                {{ $tglKembali->format('d M Y') }}
-                                                <small class="badge badge-danger">Telat</small>
-                                            </span>
-                                        @else
-                                            {{ $tglKembali->format('d M Y') }}
-                                        @endif
+                                        {{ \Carbon\Carbon::parse($d->tgl_pengembalian)->format('d M Y') }}
                                     @else
                                         <span class="text-muted">-</span>
                                     @endif
                                 </td>
 
-                                {{-- STATUS --}}
                                 <td class="text-center">
                                     @if($d->status === 'menunggu')
-                                        <span class="badge badge-warning px-3 py-2">
-                                            <i class="fas fa-clock"></i> Menunggu Approval
-                                        </span>
+                                        <span class="badge badge-warning">Menunggu</span>
                                     @elseif($d->status === 'dipinjam')
-                                        <span class="badge badge-primary px-3 py-2">
-                                            <i class="fas fa-hand-holding"></i> Dipinjam
-                                        </span>
+                                        <span class="badge badge-primary">Dipinjam</span>
                                     @elseif($d->status === 'ditolak')
-                                        <span class="badge badge-danger px-3 py-2">
-                                            <i class="fas fa-times-circle"></i> Ditolak
-                                        </span>
+                                        <span class="badge badge-danger">Ditolak</span>
                                     @elseif($d->status === 'kembali')
-                                        <span class="badge badge-success px-3 py-2">
-                                            <i class="fas fa-check-circle"></i> Dikembalikan
-                                        </span>
+                                        <span class="badge badge-success">Dikembalikan</span>
                                     @else
-                                        <span class="badge badge-secondary px-3 py-2">
-                                            {{ ucfirst($d->status) }}
-                                        </span>
+                                        <span class="badge badge-secondary">{{ ucfirst($d->status) }}</span>
                                     @endif
                                 </td>
 
-                                {{-- ✅ FIXED: CATATAN ADMIN --}}
                                 <td>
-                                    @php
-                                        $catatan = $d->catatan_admin ?? null;
-                                    @endphp
-                                    @if($catatan && $catatan !== '')
-                                        @if($d->status === 'ditolak')
-                                            <span class="text-danger">
-                                                <i class="fas fa-exclamation-circle mr-1"></i>
-                                                {{ $catatan }}
-                                            </span>
-                                        @else
-                                            <span class="text-muted">
-                                                <i class="fas fa-info-circle mr-1"></i>
-                                                {{ $catatan }}
-                                            </span>
-                                        @endif
+                                    @if($d->catatan_admin)
+                                        {{ $d->catatan_admin }}
                                     @else
                                         <span class="text-muted">-</span>
                                     @endif
                                 </td>
 
-                                {{-- AKSI --}}
                                 <td class="text-center">
+
                                     @if($d->status === 'dipinjam')
                                         <form action="{{ route('user.kembali', $d->id_peminjam) }}" method="POST">
                                             @csrf
-                                            <button type="submit" class="btn btn-success btn-sm"
-                                                onclick="return confirm('Kembalikan alat ini?')">
+                                            <button type="button"
+                                                class="btn btn-success btn-sm"
+                                                onclick="confirmKembali(this)">
                                                 <i class="fas fa-undo"></i> Kembalikan
                                             </button>
                                         </form>
+
                                     @elseif($d->status === 'menunggu')
-                                        <span class="text-warning small">
-                                            <i class="fas fa-hourglass-half"></i> Menunggu admin
-                                        </span>
+                                        <span class="text-warning small">Menunggu admin</span>
+
                                     @else
-                                        <span class="text-muted small">-</span>
+                                        <span class="text-muted">-</span>
                                     @endif
+
                                 </td>
+
                             </tr>
                             @empty
                             <tr>
@@ -131,6 +99,7 @@
                             </tr>
                             @endforelse
                         </tbody>
+
                     </table>
                 </div>
             </div>
@@ -140,4 +109,38 @@
 
 </section>
 </div>
+
+{{-- SUCCESS ALERT --}}
+@if(session('success'))
+<script>
+Swal.fire({
+    icon: 'success',
+    title: 'Berhasil',
+    text: '{{ session('success') }}',
+    showConfirmButton: false,
+    timer: 2000
+});
+</script>
+@endif
+
+{{-- CONFIRM RETURN --}}
+<script>
+function confirmKembali(btn) {
+    Swal.fire({
+        title: 'Kembalikan alat ini?',
+        text: "Data akan diproses sebagai pengembalian",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Kembalikan',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            btn.closest('form').submit();
+        }
+    });
+}
+</script>
+
 @endsection

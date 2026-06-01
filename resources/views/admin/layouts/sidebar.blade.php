@@ -36,13 +36,29 @@
 
       <li class="menu-header">Peminjaman</li>
 
-      <li class="{{ request()->routeIs('peminjam.*') ? 'active' : '' }}">
+      {{-- Menunggu Approval --}}
+      <li class="{{ request()->routeIs('peminjam.index') ? 'active' : '' }}">
         <a href="{{ route('peminjam.index') }}" class="nav-link">
-          <i class="fas fa-hand-holding"></i>
-          <span>Peminjaman</span>
+          <i class="fas fa-clock"></i>
+          <span>Permohonan</span>
+          @php
+            $menunggu = \App\Models\Peminjam::where('status','menunggu')->count();
+          @endphp
+          @if($menunggu > 0)
+            <span class="badge badge-warning ml-1">{{ $menunggu }}</span>
+          @endif
         </a>
       </li>
 
+      {{-- Peminjaman Aktif --}}
+      <li class="{{ request()->routeIs('peminjam.aktif') ? 'active' : '' }}">
+        <a href="{{ route('peminjam.aktif') }}" class="nav-link">
+          <i class="fas fa-hand-holding"></i>
+          <span>Peminjaman Aktif</span>
+        </a>
+      </li>
+
+      {{-- Pengembalian --}}
       <li class="{{ request()->routeIs('pengembalian') ? 'active' : '' }}">
         <a href="{{ route('pengembalian') }}" class="nav-link">
           <i class="fas fa-box"></i>
@@ -54,11 +70,11 @@
 
       <li>
         <a href="#" class="nav-link"
-          onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+           onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();">
           <i class="fas fa-sign-out-alt"></i>
           <span>Logout</span>
         </a>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        <form id="logout-form-sidebar" action="{{ route('logout') }}" method="POST" style="display:none;">
           @csrf
         </form>
       </li>

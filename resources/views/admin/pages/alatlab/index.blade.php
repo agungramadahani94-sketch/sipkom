@@ -19,21 +19,18 @@
                     </div>
 
                     <div class="card-body">
-                        {{-- Search Bar --}}
+
+                        {{-- SEARCH --}}
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <form method="GET" action="{{ route('alatlab.index') }}">
-                                    <input type="text"
-                                        name="search"
-                                        class="form-control"
-                                        placeholder="Cari nama alat atau kategori..."
-                                        value="{{ $search ?? '' }}">
+                                    <input type="text" name="search" class="form-control"
+                                        placeholder="Cari nama alat atau kategori..." value="{{ $search ?? '' }}">
                                 </form>
                             </div>
                         </div>
-                        
-                        <div class="table-responsive">
 
+                        <div class="table-responsive">
                             <table class="table table-bordered table-md">
 
                                 <thead>
@@ -52,15 +49,16 @@
                                     @forelse ($alat as $no => $a)
                                         <tr>
                                             <td>{{ $alat->firstItem() + $no }}</td>
+
                                             <td>
                                                 @if($a->gambar)
                                                     <img src="{{ asset('storage/' . $a->gambar) }}"
-                                                         alt="{{ $a->nama_alat }}"
-                                                         style="width:100px; height:80px; object-fit:cover; object-position:center; display:block;">
+                                                        style="width:100px; height:80px; object-fit:cover;">
                                                 @else
-                                                    <p class="text-muted">Tidak ada gambar</p>
+                                                    <span class="text-muted">Tidak ada gambar</span>
                                                 @endif
                                             </td>
+
                                             <td>{{ $a->nama_alat }}</td>
                                             <td>{{ $a->kategori }}</td>
 
@@ -87,23 +85,24 @@
                                                     @csrf
                                                     @method('DELETE')
 
-                                                    <button class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Yakin hapus data?')">
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                        onclick="confirmDelete(this)">
                                                         Hapus
                                                     </button>
                                                 </form>
                                             </td>
+
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="6" class="text-center">Data tidak ada</td>
+                                            <td colspan="7" class="text-center">Data tidak ada</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
 
                             </table>
-
                         </div>
+
                     </div>
 
                     <div class="card-footer text-right">
@@ -115,4 +114,38 @@
 
         </section>
     </div>
+
+    {{-- SUCCESS ALERT --}}
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: '{{ session('success') }}',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        </script>
+    @endif
+
+    {{-- DELETE CONFIRM SWEETALERT --}}
+    <script>
+        function confirmDelete(btn) {
+            Swal.fire({
+                title: 'Yakin hapus data?',
+                text: "Data yang dihapus tidak bisa dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    btn.closest('form').submit();
+                }
+            });
+        }
+    </script>
+
 @endsection
