@@ -200,14 +200,15 @@
                 <div class="password-wrap">
                     <input type="password" id="password" name="password" placeholder="••••••"
                         class="{{ $errors->has('password') ? 'is-invalid' : '' }}">
-                    <span class="toggle-pass" onclick="togglePassword()">👁️</span>
                 </div>
                 @error('password')
                     <div class="error-msg">{{ $message }}</div>
                 @enderror
             </div>
 
-            <button class="btn-submit">Daftar</button>
+            <button class="btn-submit" onclick="window.location.href='/login'">
+                Daftar
+            </button>
 
         </form>
 
@@ -217,7 +218,7 @@
             Sudah punya akun? <a href="{{ route('login') }}">Masuk</a>
         </div>
 
-      
+
 
     </div>
 

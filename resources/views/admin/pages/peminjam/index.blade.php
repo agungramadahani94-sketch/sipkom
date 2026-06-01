@@ -34,12 +34,12 @@
                     <table class="table table-bordered table-striped">
                         <thead class="text-center">
                             <tr class="bg-warning">
-                                <th>No</th>
-                                <th>Nama Peminjam</th>
-                                <th>Alat</th>
-                                <th>Tgl Pinjam</th>
-                                <th>Batas Kembali</th>
-                                <th>Status</th>
+                                <th class="text-white">No</th>
+                                <th class="text-white">Nama Peminjam</th>
+                                <th class="text-white">Alat</th>
+                                <th class="text-white">Tgl Pinjam</th>
+                                <th class="text-white">Batas Kembali</th>
+                                <th class="text-white">Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -60,7 +60,18 @@
                                     <form action="{{ route('peminjam.approve', $p->id_peminjam) }}" method="POST" style="display:inline;">
                                         @csrf
                                         <button type="submit" class="btn btn-success btn-sm"
-                                            onclick="return confirm('Setujui peminjaman ini?')">
+                                            onclick=" Swalfire.fire({
+                                                title: 'Setujui peminjaman ini?',
+                                                text: 'Pastikan data sudah benar sebelum menyetujui.',
+                                                icon: 'question',
+                                                showCancelButton: true,
+                                                confirmButtonText: 'Ya, Setujui',
+                                                cancelButtonText: 'Batal'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    this.form.submit();
+                                                }
+                                            }); return false;">
                                             <i class="fas fa-check"></i> Setujui
                                         </button>
                                     </form>
