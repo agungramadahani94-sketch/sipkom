@@ -10,12 +10,14 @@ class Peminjam extends Model
 
     protected $primaryKey = 'id_peminjam';
 
+   
     protected $fillable = [
         'id_user',
         'id_alat',
         'tgl_pinjam',
         'tgl_pengembalian',
         'status',
+        'catatan_admin',
     ];
 
     public function alat()

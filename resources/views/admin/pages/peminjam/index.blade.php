@@ -2,156 +2,126 @@
 
 @section('content')
 <div class="main-content">
-<section class="section">
+    <section class="section">
 
-    <div class="section-header">
-        <h1>Halaman Permohonan Peminjaman</h1>
-    </div>
-
-    <div class="section-body">
-        <div class="card">
-
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">
-                    <i class="fas fa-clock text-warning mr-1"></i>
-                    Menunggu Persetujuan
-                </h4>
-                <div>
-                    <a href="{{ route('peminjam.aktif') }}" class="btn btn-info btn-sm mr-1">
-                        <i class="fas fa-check-circle"></i> Peminjaman Aktif
-                    </a>
-                    <a href="{{ route('pengembalian') }}" class="btn btn-success btn-sm mr-1">
-                        <i class="fas fa-box"></i> Pengembalian
-                    </a>
-                    <a href="{{ route('peminjam.create') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus"></i> Tambah Manual
-                    </a>
-                </div>
-            </div>
-
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
-                        <thead class="text-center">
-                            <tr class="bg-warning">
-                                <th class="text-white">No</th>
-                                <th class="text-white">Nama Peminjam</th>
-                                <th class="text-white">Alat</th>
-                                <th class="text-white">Tgl Pinjam</th>
-                                <th class="text-white">Batas Kembali</th>
-                                <th class="text-white">Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($peminjams as $i => $p)
-                            <tr>
-                                <td class="text-center">{{ $peminjams->firstItem() + $i }}</td>
-                                <td>{{ $p->user->nama ?? '-' }}</td>
-                                <td>{{ $p->alat->nama_alat ?? '-' }}</td>
-                                <td>{{ \Carbon\Carbon::parse($p->tgl_pinjam)->format('d M Y') }}</td>
-                                <td>{{ $p->tgl_pengembalian ? \Carbon\Carbon::parse($p->tgl_pengembalian)->format('d M Y') : '-' }}</td>
-                                <td class="text-center">
-                                    <span class="badge badge-warning">Menunggu</span>
-                                </td>
-                                <td class="text-center">
-
-                                    {{-- APPROVE --}}
-                                    <form action="{{ route('peminjam.approve', $p->id_peminjam) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        <button type="submit" class="btn btn-success btn-sm"
-                                            onclick=" Swalfire.fire({
-                                                title: 'Setujui peminjaman ini?',
-                                                text: 'Pastikan data sudah benar sebelum menyetujui.',
-                                                icon: 'question',
-                                                showCancelButton: true,
-                                                confirmButtonText: 'Ya, Setujui',
-                                                cancelButtonText: 'Batal'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    this.form.submit();
-                                                }
-                                            }); return false;">
-                                            <i class="fas fa-check"></i> Setujui
-                                        </button>
-                                    </form>
-
-                                    {{-- TOLAK --}}
-                                    <button type="button" class="btn btn-danger btn-sm"
-                                        onclick="showTolakModal({{ $p->id_peminjam }})">
-                                        <i class="fas fa-times"></i> Tolak
-                                    </button>
-
-                                    {{-- HAPUS --}}
-                                    <form action="{{ route('peminjam.destroy', $p->id_peminjam) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-secondary btn-sm"
-                                            onclick="return confirm('Hapus data ini?')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="7" class="text-center text-muted py-4">
-                                    <i class="fas fa-check-circle text-success fa-2x mb-2 d-block"></i>
-                                    Tidak ada permohonan yang menunggu persetujuan.
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="mt-3 d-flex justify-content-end">
-                    {{ $peminjams->links() }}
-                </div>
-            </div>
-
+        <div class="section-header">
+            <h1>Halaman Alat Laboratorium</h1>
         </div>
-    </div>
 
-</section>
-</div>
+        <div class="section-body">
+            <div class="card shadow-sm">
 
-{{-- MODAL TOLAK --}}
-<div class="modal fade" id="modalTolak" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title"><i class="fas fa-times-circle mr-1"></i> Tolak Peminjaman</h5>
-                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
-            </div>
-            <form id="formTolak" method="POST">
-                @csrf
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label class="font-weight-bold">Alasan Penolakan (opsional)</label>
-                        <textarea name="catatan" class="form-control" rows="3"
-                            placeholder="Contoh: Stok tidak mencukupi, alat sedang dalam perbaikan, dll."></textarea>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Data Alat Lab</h4>
+                    <a href="{{ route('alatlab.create') }}" class="btn btn-primary">
+                        + Tambah Data
+                    </a>
+                </div>
+
+                <div class="card-body">
+
+                    {{-- SEARCH --}}
+                    <div class="row mb-3">
+                        <div class="col-md-5">
+                            <form method="GET" action="{{ route('alatlab.index') }}" class="d-flex">
+                                <input type="text"
+                                    name="search"
+                                    class="form-control mr-2"
+                                    placeholder="Cari nama alat atau kategori..."
+                                    value="{{ $search ?? '' }}">
+                                <button type="submit" class="btn btn-primary">Cari</button>
+                                @if(!empty($search))
+                                    <a href="{{ route('alatlab.index') }}" class="btn btn-secondary ml-1">Reset</a>
+                                @endif
+                            </form>
+                        </div>
+                    </div>
+
+                    {{-- TABLE --}}
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle">
+
+                            <thead class="text-center">
+                                <tr class="bg-primary">
+                                    <th class="text-white">No</th>
+                                    <th class="text-white">Gambar</th>
+                                    <th class="text-white">Nama Alat</th>
+                                    <th class="text-white">Kategori</th>
+                                    <th class="text-white">Kondisi</th>
+                                    <th class="text-white">Stok</th>
+                                    <th class="text-white">Aksi</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @forelse ($alat as $no => $a)
+                                <tr>
+                                    <td class="text-center">{{ $alat->firstItem() + $no }}</td>
+
+                                    <td class="text-center">
+                                        @if($a->gambar)
+                                            <img src="{{ asset('storage/' . $a->gambar) }}"
+                                                alt="{{ $a->nama_alat }}"
+                                                style="width:100px; height:80px; object-fit:cover; border-radius:6px;">
+                                        @else
+                                            <span class="text-muted">Tidak ada</span>
+                                        @endif
+                                    </td>
+
+                                    <td>{{ $a->nama_alat }}</td>
+                                    <td>{{ $a->kategori }}</td>
+
+                                    <td class="text-center">
+                                        @if($a->kondisi == 'baik')
+                                            <span class="badge badge-success px-3 py-1">Baik</span>
+                                        @elseif($a->kondisi == 'rusak')
+                                            <span class="badge badge-danger px-3 py-1">Rusak</span>
+                                        @else
+                                            <span class="badge badge-warning px-3 py-1">Perbaikan</span>
+                                        @endif
+                                    </td>
+
+                                    <td class="text-center">{{ $a->stok }}</td>
+
+                                    <td class="text-center">
+                                        <a href="{{ route('alatlab.edit', $a->id_alat) }}"
+                                            class="btn btn-warning btn-sm mr-1">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+
+                                        <form action="{{ route('alatlab.destroy', $a->id_alat) }}"
+                                            method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Yakin hapus data ini?')">
+                                                <i class="fas fa-trash"></i> Hapus
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+
+                                @empty
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-4">
+                                        <i class="fas fa-inbox"></i>
+                                        {{ isset($search) && $search ? 'Data tidak ditemukan untuk "' . $search . '"' : 'Belum ada data alat.' }}
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+
+                        </table>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-times"></i> Tolak
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
-@push('js')
-<script>
-function showTolakModal(id) {
-    const form = document.getElementById('formTolak');
-    form.action = '/admin/peminjaman/' + id + '/tolak';
-    $('#modalTolak').modal('show');
-}
-</script>
-@endpush
+                <div class="card-footer text-right">
+                    {{ $alat->links() }}
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+</div>
 @endsection

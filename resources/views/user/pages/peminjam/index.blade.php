@@ -59,30 +59,47 @@
                                 {{-- STATUS --}}
                                 <td class="text-center">
                                     @if($d->status === 'menunggu')
-                                        <span class="badge badge-warning">
+                                        <span class="badge badge-warning px-3 py-2">
                                             <i class="fas fa-clock"></i> Menunggu Approval
                                         </span>
                                     @elseif($d->status === 'dipinjam')
-                                        <span class="badge badge-primary">
+                                        <span class="badge badge-primary px-3 py-2">
                                             <i class="fas fa-hand-holding"></i> Dipinjam
                                         </span>
                                     @elseif($d->status === 'ditolak')
-                                        <span class="badge badge-danger">
+                                        <span class="badge badge-danger px-3 py-2">
                                             <i class="fas fa-times-circle"></i> Ditolak
                                         </span>
-                                    @else
-                                        <span class="badge badge-success">
+                                    @elseif($d->status === 'kembali')
+                                        <span class="badge badge-success px-3 py-2">
                                             <i class="fas fa-check-circle"></i> Dikembalikan
+                                        </span>
+                                    @else
+                                        <span class="badge badge-secondary px-3 py-2">
+                                            {{ ucfirst($d->status) }}
                                         </span>
                                     @endif
                                 </td>
 
-                                {{-- CATATAN ADMIN --}}
+                                {{-- ✅ FIXED: CATATAN ADMIN --}}
                                 <td>
-                                    @if($d->catatan_admin)
-                                        <small class="text-muted">{{ $d->catatan_admin }}</small>
+                                    @php
+                                        $catatan = $d->catatan_admin ?? null;
+                                    @endphp
+                                    @if($catatan && $catatan !== '')
+                                        @if($d->status === 'ditolak')
+                                            <span class="text-danger">
+                                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                                {{ $catatan }}
+                                            </span>
+                                        @else
+                                            <span class="text-muted">
+                                                <i class="fas fa-info-circle mr-1"></i>
+                                                {{ $catatan }}
+                                            </span>
+                                        @endif
                                     @else
-                                        <small class="text-muted">-</small>
+                                        <span class="text-muted">-</span>
                                     @endif
                                 </td>
 

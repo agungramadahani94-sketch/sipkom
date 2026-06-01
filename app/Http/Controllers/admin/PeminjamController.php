@@ -10,9 +10,6 @@ use Illuminate\Http\Request;
 
 class PeminjamController extends Controller
 {
-    // ========================================================
-    // INDEX — Menunggu Approval
-    // ========================================================
     public function index()
     {
         $peminjams = Peminjam::with(['user', 'alat'])
@@ -23,9 +20,6 @@ class PeminjamController extends Controller
         return view('admin.pages.peminjam.index', compact('peminjams'));
     }
 
-    // ========================================================
-    // AKTIF — Sudah Disetujui / Dipinjam
-    // ========================================================
     public function aktif()
     {
         $peminjams = Peminjam::with(['user', 'alat'])
@@ -36,9 +30,6 @@ class PeminjamController extends Controller
         return view('admin.pages.peminjam.aktif', compact('peminjams'));
     }
 
-    // ========================================================
-    // CREATE & STORE — Admin tambah manual (langsung dipinjam)
-    // ========================================================
     public function create()
     {
         $users = User::where('role', 'user')->get();
@@ -74,9 +65,6 @@ class PeminjamController extends Controller
         return redirect()->route('peminjam.index')->with('success', 'Data peminjaman berhasil ditambahkan!');
     }
 
-    // ========================================================
-    // EDIT & UPDATE
-    // ========================================================
     public function edit($id)
     {
         $peminjam = Peminjam::findOrFail($id);
@@ -96,7 +84,6 @@ class PeminjamController extends Controller
 
         $peminjam = Peminjam::findOrFail($id);
 
-        // Jika alat diganti dan status sudah dipinjam → kembalikan stok lama & kurangi stok baru
         if ($peminjam->id_alat != $request->id_alat && $peminjam->status === 'dipinjam') {
             $alatLama = AlatLab::find($peminjam->id_alat);
             if ($alatLama) $alatLama->increment('stok');
@@ -118,14 +105,10 @@ class PeminjamController extends Controller
         return redirect()->route('peminjam.index')->with('success', 'Data berhasil diupdate!');
     }
 
-    // ========================================================
-    // DESTROY
-    // ========================================================
     public function destroy($id)
     {
         $peminjam = Peminjam::findOrFail($id);
 
-        // Kembalikan stok hanya jika statusnya dipinjam
         if ($peminjam->status === 'dipinjam') {
             $alat = AlatLab::find($peminjam->id_alat);
             if ($alat) $alat->increment('stok');
@@ -136,9 +119,6 @@ class PeminjamController extends Controller
         return redirect()->route('peminjam.index')->with('success', 'Data berhasil dihapus!');
     }
 
-    // ========================================================
-    // APPROVE — Setujui permohonan, stok baru dikurangi
-    // ========================================================
     public function approve($id)
     {
         $peminjam = Peminjam::findOrFail($id);
@@ -153,19 +133,16 @@ class PeminjamController extends Controller
             return back()->with('error', 'Stok alat sudah habis, tidak bisa disetujui!');
         }
 
-        $peminjam->update([
-            'status'        => 'dipinjam',
-            'catatan_admin' => 'Disetujui oleh admin.',
-        ]);
+        $peminjam->status        = 'dipinjam';
+        $peminjam->catatan_admin = 'Disetujui oleh admin.';
+        $peminjam->save();
 
         $alat->decrement('stok');
 
         return back()->with('success', 'Peminjaman berhasil disetujui!');
     }
 
-    // ========================================================
-    // TOLAK — Tolak permohonan
-    // ========================================================
+    // ✅ FIXED: pakai save() bukan update() agar fillable tidak blocking
     public function tolak(Request $request, $id)
     {
         $peminjam = Peminjam::findOrFail($id);
@@ -174,17 +151,15 @@ class PeminjamController extends Controller
             return back()->with('error', 'Hanya permohonan berstatus menunggu yang bisa ditolak!');
         }
 
-        $peminjam->update([
-            'status'        => 'ditolak',
-            'catatan_admin' => $request->catatan ?? 'Ditolak oleh admin.',
-        ]);
+        $catatan = trim($request->input('catatan', ''));
+
+        $peminjam->status        = 'ditolak';
+        $peminjam->catatan_admin = $catatan !== '' ? $catatan : 'Ditolak oleh admin.';
+        $peminjam->save();
 
         return back()->with('success', 'Peminjaman berhasil ditolak.');
     }
 
-    // ========================================================
-    // KEMBALI — Tandai alat sudah dikembalikan
-    // ========================================================
     public function kembali($id)
     {
         $peminjam = Peminjam::findOrFail($id);
@@ -193,10 +168,9 @@ class PeminjamController extends Controller
             return back()->with('error', 'Hanya peminjaman aktif yang bisa ditandai dikembalikan!');
         }
 
-        $peminjam->update([
-            'status'           => 'kembali',
-            'tgl_pengembalian' => now()->toDateString(),
-        ]);
+        $peminjam->status           = 'kembali';
+        $peminjam->tgl_pengembalian = now()->toDateString();
+        $peminjam->save();
 
         $alat = AlatLab::find($peminjam->id_alat);
         if ($alat) $alat->increment('stok');
@@ -204,9 +178,6 @@ class PeminjamController extends Controller
         return back()->with('success', 'Alat berhasil ditandai dikembalikan!');
     }
 
-    // ========================================================
-    // PENGEMBALIAN — Riwayat yang sudah dikembalikan
-    // ========================================================
     public function pengembalian()
     {
         $pengembalian = Peminjam::with(['user', 'alat'])
