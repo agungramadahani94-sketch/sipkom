@@ -4,8 +4,8 @@
 <div class="main-content">
 <section class="section">
 
-    <div class="section-header justify-content-center">
-        <h1>Data Pengembalian</h1>
+    <div class="section-header">
+        <h1>Halaman Data Pengembalian</h1>
     </div>
 
     <div class="section-body">
