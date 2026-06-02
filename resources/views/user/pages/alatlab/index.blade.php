@@ -5,13 +5,30 @@
         <section class="section">
 
             {{-- HEADER --}}
-            <div class="section-header">
-                <h1>Daftar Alat</h1>
+            <div class="section-header justify-content-center flex-column">
+
+
+                <div class="w-100" style="max-width: 600px;">
+                    <div class="input-group">
+                        <input id="alatSearch" type="text" class="form-control"
+                            placeholder="Cari nama atau kategori alat..." aria-label="Cari alat">
+
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+
+                            <button id="clearSearch" class="btn btn-outline-danger" type="button">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {{-- CONTENT --}}
             <div class="section-body">
-                <div class="row">
+                <div class="row" id="alatList">
 
                     @forelse($alat as $item)
                         <div class="col-md-4 mb-4">
@@ -40,7 +57,6 @@
                                         {{ ucfirst($item->kategori) }}
                                     </p>
 
-                                    {{-- INFO --}}
                                     <div class="mb-3">
                                         <small class="text-muted d-block mb-1">
                                             Stok Tersedia:
@@ -55,7 +71,6 @@
                                         </span>
                                     </div>
 
-                                    {{-- BUTTON --}}
                                     <div class="mt-auto">
                                         @if($item->stok > 0)
                                             <a href="{{ route('user.pinjam', $item->id_alat) }}" class="btn btn-primary btn-block">
@@ -74,7 +89,6 @@
                         </div>
                     @empty
 
-                        {{-- EMPTY STATE --}}
                         <div class="col-12 text-center py-5">
                             <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
                             <p class="text-muted">Belum ada alat tersedia</p>
@@ -82,15 +96,18 @@
 
                     @endforelse
 
+                    <div id="noResults" class="col-12 text-center py-5 d-none">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Tidak ada hasil pencarian.</p>
+                    </div>
+
                 </div>
             </div>
 
         </section>
     </div>
 
-    {{-- STYLE --}}
     <style>
-        /* CARD */
         .alat-card {
             border-radius: 12px;
             overflow: hidden;
@@ -99,10 +116,9 @@
 
         .alat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .12);
         }
 
-        /* IMAGE */
         .alat-img {
             height: 200px;
             background: #f5f7fa;
@@ -117,7 +133,7 @@
             max-height: 100%;
             object-fit: contain;
             padding: 16px;
-            transition: 0.3s;
+            transition: .3s;
         }
 
         .alat-card:hover .alat-img-content {
@@ -125,10 +141,9 @@
         }
 
         .img-empty {
-            opacity: 0.4;
+            opacity: .4;
         }
 
-        /* TEXT */
         .alat-title {
             font-size: 16px;
             font-weight: 600;
@@ -142,11 +157,77 @@
             margin-bottom: 10px;
         }
 
-        /* BADGE */
         .badge {
             padding: 5px 8px;
             font-size: 12px;
         }
+
+        .section-header {
+            justify-content: center !important;
+            align-items: center !important;
+            flex-direction: column !important;
+            text-align: center !important;
+        }
+
+        .section-header h1 {
+            width: 100%;
+            text-align: center;
+        }
+
+        #alatSearch {
+            min-height: 45px;
+        }
     </style>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const searchInput = document.getElementById('alatSearch');
+            const clearButton = document.getElementById('clearSearch');
+            const noResults = document.getElementById('noResults');
+
+            const alatRows = Array.from(
+                document.querySelectorAll('#alatList > .col-md-4.mb-4')
+            );
+
+            function filterItems() {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                let visibleCount = 0;
+
+                alatRows.forEach(function (row) {
+
+                    const title =
+                        row.querySelector('.alat-title')?.textContent.toLowerCase() || '';
+
+                    const category =
+                        row.querySelector('.alat-kategori')?.textContent.toLowerCase() || '';
+
+                    const matches =
+                        title.includes(searchTerm) ||
+                        category.includes(searchTerm);
+
+                    row.style.display = matches ? '' : 'none';
+
+                    if (matches) {
+                        visibleCount++;
+                    }
+                });
+
+                if (searchTerm === '') {
+                    noResults.classList.add('d-none');
+                } else {
+                    noResults.classList.toggle('d-none', visibleCount > 0);
+                }
+            }
+
+            searchInput.addEventListener('input', filterItems);
+
+            clearButton.addEventListener('click', function () {
+                searchInput.value = '';
+                filterItems();
+                searchInput.focus();
+            });
+
+        });
+    </script>
 @endsection
