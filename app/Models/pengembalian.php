@@ -4,17 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class pengembalian extends Model
+class Pengembalian extends Model
 {
     protected $table = 'pengembalians';
+
     protected $fillable = [
-        'id_peminjaman',
-        'tanggal_pengembalian',
-        'denda',
+        'peminjam_id',
+        'tanggal_kembali',
+        'status',
     ];
 
-    public function peminjaman()
+    public function peminjam()
     {
-        return $this->belongsTo(peminjamans::class, 'id_peminjaman');
+        return $this->belongsTo(Peminjam::class, 'peminjam_id', 'id_peminjam');
     }
 }

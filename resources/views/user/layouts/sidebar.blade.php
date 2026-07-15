@@ -37,7 +37,18 @@
       <hr class="bg-white">
 
       <li>
-        <a href="" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();">
+        <a href="" class="nav-link" onclick="event.preventDefault(); Swal.fire({
+             title: 'Yakin ingin logout?',
+             icon: 'warning',
+             showCancelButton: true,
+             confirmButtonColor: '#3085d6',
+             cancelButtonColor: '#d33',
+             confirmButtonText: 'Ya, Logout!'
+           }).then((result) => {
+             if (result.isConfirmed) {
+               document.getElementById('logout-form-sidebar').submit();
+             }
+           });">
           <i class="fas fa-sign-out-alt"></i>
           <span>Logout</span>
         </a>

@@ -10,7 +10,7 @@ class Peminjam extends Model
 
     protected $primaryKey = 'id_peminjam';
 
-   
+
     protected $fillable = [
         'id_user',
         'id_alat',
@@ -28,5 +28,10 @@ class Peminjam extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
+
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjam::class, 'id_alat', 'id_alat');
     }
 }

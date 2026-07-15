@@ -15,7 +15,7 @@ return new class extends Migration
             $table->date('tgl_pinjam');
             $table->date('tgl_pengembalian')->nullable();
             $table->enum('status', ['menunggu', 'dipinjam', 'ditolak', 'kembali'])->default('menunggu');
-            $table->text('catatan_admin')->nullable(); // alasan tolak / catatan approve
+            $table->text('catatan_admin')->nullable(); 
             $table->timestamps();
 
             $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');

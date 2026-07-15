@@ -42,7 +42,7 @@
           <i class="fas fa-clock"></i>
           <span>Permohonan</span>
           @php
-            $menunggu = \App\Models\Peminjam::where('status','menunggu')->count();
+            $menunggu = \App\Models\Peminjam::where('status', 'menunggu')->count();
           @endphp
           @if($menunggu > 0)
             <span class="badge badge-warning ml-1">{{ $menunggu }}</span>
@@ -69,8 +69,18 @@
       <hr class="bg-white">
 
       <li>
-        <a href="#" class="nav-link"
-           onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();">
+        <a href="#" class="nav-link" onclick="event.preventDefault(); Swal.fire({
+             title: 'Yakin ingin logout?',
+             icon: 'warning',
+             showCancelButton: true,
+             confirmButtonColor: '#3085d6',
+             cancelButtonColor: '#d33',
+             confirmButtonText: 'Ya, Logout!'
+           }).then((result) => {
+             if (result.isConfirmed) {
+               document.getElementById('logout-form-sidebar').submit();
+             }
+           });">
           <i class="fas fa-sign-out-alt"></i>
           <span>Logout</span>
         </a>
